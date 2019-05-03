@@ -17,12 +17,12 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'Servicedesk'
+project = 'AssetMgmt'
 copyright = '2019, Ashley Collinge'
 author = 'Ashley Collinge'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.0.1'
+release = '0.0.1'
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,7 +30,7 @@ release = 'v0.0.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode'
+extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
