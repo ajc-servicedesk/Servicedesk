@@ -7,7 +7,7 @@ from app.modules.api.models import Tickets
 mod_api = Blueprint('api', __name__, url_prefix='/api')
 
 
-@mod_api.route('/tickets', methods=['GET'])
+@mod_api.route('/tickets/<int:ticket_id>', methods=['GET'])
 def get_tickets(ticket_id: str = "") -> jsonify:
 	"""
 	Retrieves a list of all tickets and returns the basic information
@@ -44,7 +44,7 @@ def new_ticket() -> jsonify:
 	return jsonify({"Ticket_ID":new_ticket.id})
 
 
-@mod_api.route('/agents', methods=['GET'])
+@mod_api.route('/agents/<int:agent_id>', methods=['GET'])
 def get_agents(agent_id: str = "") -> jsonify:
 	"""
 	Retrieves a list of all agents and returns the basic information
