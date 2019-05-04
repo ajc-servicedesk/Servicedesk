@@ -33,6 +33,8 @@
   <h1>Source code for app.modules.api.views</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">app</span> <span class="k">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">app.modules.api.models</span> <span class="k">import</span> <span class="n">Tickets</span>
 
 <span class="c1"># Define the blueprint: &#39;auth&#39;, set its url prefix: app.url/auth</span>
 <span class="n">mod_api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
@@ -51,7 +53,28 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		Returns json message.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;test&quot;</span><span class="p">:</span><span class="s2">&quot;test&quot;</span><span class="p">})</span></div>
+	<span class="n">tickets</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">ticket_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Tickets</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">ticket</span> <span class="ow">in</span> <span class="n">ticket_results</span><span class="p">:</span>
+		<span class="n">new_ticket</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">new_ticket</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ticket</span><span class="o">.</span><span class="n">id</span>
+		<span class="n">tickets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_ticket</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Data&quot;</span><span class="p">:</span><span class="n">tickets</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="new_ticket"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.new_ticket">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/tickets&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">new_ticket</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Adds a new ticket and returns the ticket_id</span>
+<span class="sd">	assigned.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		Returns ticket_id of the new ticket entry.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">new_ticket</span> <span class="o">=</span> <span class="n">Tickets</span><span class="p">()</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_ticket</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Ticket_ID&quot;</span><span class="p">:</span><span class="n">new_ticket</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_agents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_agents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agents&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
