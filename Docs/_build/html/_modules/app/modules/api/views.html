@@ -38,23 +38,31 @@
 <span class="n">mod_api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="hello"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.hello">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/hello&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
-	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Simple request to test the API is online and</span>
-<span class="sd">    available</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="s2">&quot;Online&quot;</span></div>
-
 <div class="viewcode-block" id="get_tickets"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_tickets">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/tickets&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">get_tickets</span><span class="p">(</span><span class="n">ticket_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">get_tickets</span><span class="p">(</span><span class="n">ticket_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieves a list of all tickets and returns the basic information</span>
 <span class="sd">	for each ticket. Further API calls would be required to get further</span>
 <span class="sd">	information.</span>
-<span class="sd">	</span>
+
 <span class="sd">	Args</span>
 <span class="sd">		:ticket_id (str): Unique ID for the ticket.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		Returns json message.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;test&quot;</span><span class="p">:</span><span class="s2">&quot;test&quot;</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="get_agents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_agents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agents&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_agents</span><span class="p">(</span><span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Retrieves a list of all agents and returns the basic information</span>
+<span class="sd">	for each agent. Further API calls would be required to get further</span>
+<span class="sd">	information.</span>
+
+<span class="sd">	Args</span>
+<span class="sd">		:agent_id (str): Unique ID for the ticket.</span>
 
 <span class="sd">	Returns:</span>
 <span class="sd">		Returns json message.</span>
