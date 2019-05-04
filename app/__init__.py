@@ -1,5 +1,4 @@
 from flask import Flask, render_template
-from celery import Celery
 
 
 application = Flask(__name__)
