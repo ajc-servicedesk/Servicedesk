@@ -10,15 +10,22 @@ mod_api = Blueprint('api', __name__, url_prefix='/api')
 @mod_api.route('/incident/<int:incident_id>', methods=['GET'])
 def get_incidents(incident_id: str = "") -> jsonify:
 	"""
-	Retrieves a list of all incidents and returns the basic information
-	for each ticket. Further API calls would be required to get further
-	information.
+	Retrieve a list of all incidents (default=last100).
+	Pagination on the request for all incidents.
+	Retrieve json data on an incident and return. ID required.
 
 	Args
-		:incident_id (str): Unique ID for the ticket.
+		:incident_id (str): Unique ID for the ticket. (Optional)
 
 	Returns:
 		Returns json message.
+
+		{
+			"Data": {
+				"id": "1"
+			}
+		}
+
 	"""
 	incidents = []
 	incident_results = db.session.query(Incident).all()
@@ -29,7 +36,7 @@ def get_incidents(incident_id: str = "") -> jsonify:
 	return jsonify({"Data":incidents})
 
 
-@mod_api.route('/incident/', methods=['POST'])
+@mod_api.route('/incident', methods=['POST'])
 def new_incident() -> jsonify:
 	"""
 	Adds a new incident and returns the incident_id

@@ -23,6 +23,7 @@ api
 ===================
 .. automodule:: app.modules.api.views
    :members:
+
 models
 ===================
 .. automodule:: app.modules.api.models

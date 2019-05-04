@@ -66,19 +66,28 @@ information.</p>
 <dl class="function">
 <dt id="app.modules.api.views.get_incidents">
 <code class="descclassname">app.modules.api.views.</code><code class="descname">get_incidents</code><span class="sig-paren">(</span><em>incident_id: str = ''</em><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_incidents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_incidents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves a list of all incidents and returns the basic information
-for each ticket. Further API calls would be required to get further
-information.</p>
+<dd><p>Retrieve a list of all incidents (default=last100).
+Pagination on the request for all incidents.
+Retrieve json data on an incident and return. ID required.</p>
 <dl class="simple">
 <dt>Args</dt><dd><dl class="field-list simple">
 <dt class="field-odd">incident_id (str)</dt>
-<dd class="field-odd"><p>Unique ID for the ticket.</p>
+<dd class="field-odd"><p>Unique ID for the ticket. (Optional)</p>
 </dd>
 </dl>
 </dd>
 <dt>Returns:</dt><dd><p>Returns json message.</p>
 </dd>
 </dl>
+<dl>
+<dt>{</dt><dd><dl class="simple">
+<dt>“Data”: {</dt><dd><p>“id”: “1”</p>
+</dd>
+</dl>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
 </dd></dl>
 
 <dl class="function">
