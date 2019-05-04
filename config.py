@@ -7,7 +7,7 @@ BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
 # Define the database - we are working with
 # SQLite for this example
-SQLALCHEMY_DATABASE_URI = "mssql+pyodbc://db_admin:Mltqtgyze1!@apt-servicedesk.database.windows.net/Servicedesk?driver=ODBC+Driver+13+for+SQL+Server"
+SQLALCHEMY_DATABASE_URI = "mysql://assetmgmt2:test@51.141.113.229/assetmgmt"
 
 #engine = create_engine('postgresql://scott:tiger@localhost/mydatabase')
 #DATABASE_CONNECT_OPTIONS = {}
