@@ -11,7 +11,9 @@ from app.modules.docs.views import mod_docs
 # Register blueprint(s)
 application.register_blueprint(mod_api)
 application.register_blueprint(mod_docs)
-db.create_all()
+
+from app.modules.api import models
+models.db.create_all()
 
 
 @application.errorhandler(404)

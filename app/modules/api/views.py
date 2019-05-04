@@ -1,12 +1,12 @@
 from flask import Flask
 from flask import Blueprint, request, jsonify
 from app import db
-from app.modules.api.models import Incident
+from app.modules.api.models import *
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_api = Blueprint('api', __name__, url_prefix='/api')
 
-
+@mod_api.route('/incident', methods=['GET'])
 @mod_api.route('/incident/<int:incident_id>', methods=['GET'])
 def get_incidents(incident_id: str = "") -> jsonify:
 	"""
