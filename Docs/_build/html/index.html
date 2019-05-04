@@ -64,14 +64,14 @@ information.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="app.modules.api.views.get_tickets">
-<code class="descclassname">app.modules.api.views.</code><code class="descname">get_tickets</code><span class="sig-paren">(</span><em>ticket_id: str = ''</em><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_tickets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_tickets" title="Permalink to this definition">¶</a></dt>
-<dd><p>Retrieves a list of all tickets and returns the basic information
+<dt id="app.modules.api.views.get_incidents">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_incidents</code><span class="sig-paren">(</span><em>incident_id: str = ''</em><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_incidents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_incidents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves a list of all incidents and returns the basic information
 for each ticket. Further API calls would be required to get further
 information.</p>
 <dl class="simple">
 <dt>Args</dt><dd><dl class="field-list simple">
-<dt class="field-odd">ticket_id (str)</dt>
+<dt class="field-odd">incident_id (str)</dt>
 <dd class="field-odd"><p>Unique ID for the ticket.</p>
 </dd>
 </dl>
@@ -82,15 +82,79 @@ information.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="app.modules.api.views.new_ticket">
-<code class="descclassname">app.modules.api.views.</code><code class="descname">new_ticket</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_ticket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_ticket" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds a new ticket and returns the ticket_id
+<dt id="app.modules.api.views.new_incident">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_incident" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new incident and returns the incident_id
 assigned.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>Returns ticket_id of the new ticket entry.</p>
+<dt>Returns:</dt><dd><p>Returns incident_id of the new ticket entry.</p>
 </dd>
 </dl>
 </dd></dl>
+
+</div>
+<div class="section" id="module-app.modules.api.models">
+<span id="models"></span><h1>models<a class="headerlink" href="#module-app.modules.api.models" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="app.modules.api.models.Agent">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">Agent</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.Agent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.AgentGroup">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">AgentGroup</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#AgentGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.AgentGroup" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.Incident">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">Incident</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#Incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.Incident" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.IncidentCategory">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">IncidentCategory</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#IncidentCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.IncidentCategory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.IncidentImpact">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">IncidentImpact</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#IncidentImpact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.IncidentImpact" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.IncidentNote">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">IncidentNote</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#IncidentNote"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.IncidentNote" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains all notes (private/public) on tickets</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.IncidentPriority">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">IncidentPriority</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#IncidentPriority"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.IncidentPriority" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.IncidentStatus">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">IncidentStatus</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#IncidentStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.IncidentStatus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.IncidentSubCategory">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">IncidentSubCategory</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#IncidentSubCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.IncidentSubCategory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.IncidentUrgency">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">IncidentUrgency</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#IncidentUrgency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.IncidentUrgency" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.Requester">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">Requester</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#Requester"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.Requester" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="app.modules.api.models.RequesterDepartment">
+<em class="property">class </em><code class="descclassname">app.modules.api.models.</code><code class="descname">RequesterDepartment</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/app/modules/api/models.html#RequesterDepartment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.models.RequesterDepartment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 
