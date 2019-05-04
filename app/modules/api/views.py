@@ -14,12 +14,12 @@ def hello():
 	return "Online"
 
 @mod_api.route('/tickets', methods=['GET'])
-def get_tickets(ticket_id: str) -> jsonify:
+def get_tickets(ticket_id: str = "") -> jsonify:
 	"""
 	Retrieves a list of all tickets and returns the basic information
 	for each ticket. Further API calls would be required to get further
 	information.
-	
+
 	Args
 		:ticket_id (str): Unique ID for the ticket.
 
