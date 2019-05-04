@@ -1,14 +1,18 @@
 from flask import Flask, render_template
-
+from flask_sqlalchemy import SQLAlchemy
 
 application = Flask(__name__)
 application.config.from_object('config')
+
+db = SQLAlchemy(application)
 
 from app.modules.api.views import mod_api
 from app.modules.docs.views import mod_docs
 # Register blueprint(s)
 application.register_blueprint(mod_api)
 application.register_blueprint(mod_docs)
+db.create_all()
+
 
 @application.errorhandler(404)
 def not_found(error):
