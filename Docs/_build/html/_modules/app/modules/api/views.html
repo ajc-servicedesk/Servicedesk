@@ -32,7 +32,7 @@
             
   <h1>Source code for app.modules.api.views</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span>
-<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
 
 <span class="c1"># Define the blueprint: &#39;auth&#39;, set its url prefix: app.url/auth</span>
 <span class="n">mod_api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
@@ -45,6 +45,21 @@
 <span class="sd">    available</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="s2">&quot;Online&quot;</span></div>
+
+<div class="viewcode-block" id="get_tickets"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_tickets">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/tickets&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_tickets</span><span class="p">(</span><span class="n">ticket_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Retrieves a list of all tickets and returns the basic information</span>
+<span class="sd">	for each ticket. Further API calls would be required to get further</span>
+<span class="sd">	information.</span>
+<span class="sd">	</span>
+<span class="sd">	Args</span>
+<span class="sd">		:ticket_id (str): Unique ID for the ticket.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		Returns json message.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;test&quot;</span><span class="p">:</span><span class="s2">&quot;test&quot;</span><span class="p">})</span></div>
 </pre></div>
 
           </div>
