@@ -212,3 +212,36 @@ def new_status() -> jsonify:
 	db.session.add(new_status)
 	db.session.commit()
 	return jsonify({"Status_ID":new_status.id})
+
+
+@mod_api.route('/priority/', methods=['GET'])
+def get_priority() -> jsonify:
+	"""
+	Retrieve a list of all priority.
+
+	Returns:
+		Returns name and id of priority
+	"""
+	priorities = []
+	priority_results = db.session.query(IncidentPriority).all()
+	for priority in priority_results:
+		new_priority = {}
+		new_priority['id'] = priority.id
+		new_priority['name'] = priority.name
+		priorities.append(new_priority)
+	return jsonify({"Data":priorities})
+
+
+@mod_api.route('/priority/', methods=['POST'])
+def new_priority() -> jsonify:
+	"""
+	Adds a new priority and returns the priority_id
+	assigned.
+
+	Returns:
+		Returns priority_id, name of the new priority.
+	"""
+	new_priority = IncidentPriority()
+	db.session.add(new_priority)
+	db.session.commit()
+	return jsonify({"priority_id":new_priority.id})
