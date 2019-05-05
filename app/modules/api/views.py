@@ -300,6 +300,9 @@ def new_status() -> jsonify:
 
 	Returns:
 		Returns status_id, name of the new status.
+	
+	If error:
+		Return what data is missing or why it's bad.
 	"""
 	new_status = IncidentStatus()
 	post_data = request.json
