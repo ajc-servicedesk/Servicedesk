@@ -24,7 +24,7 @@
     </div>
     <div class="text-center col-md-3">
         <h2>Incident Priorities</h2>
-        <table class="table table-sm" id="PriorityTable">
+        <table class="table table-sm" id="IncidentPriorityTable">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -151,7 +151,7 @@
 
     function NewPriorityonTable() {
         document.getElementById("NewPriorityButton").style.display = "none";
-        var tableRef = document.getElementById('PriorityTable').getElementsByTagName('tbody')[0];
+        var tableRef = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
         var newRow =tableRef.insertRow(tableRef.rows.length);
         newRow.id = "NewPriorityRow";
         var name_cell = newRow.insertCell(0);
@@ -189,7 +189,7 @@
     }
 
     function LoadPriorityTable() {
-        var tableRef = document.getElementById('PriorityTable').getElementsByTagName('tbody')[0];
+        var tableRef = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
         tableRef.innerHTML = "";
         var request = new XMLHttpRequest();
         request.open('GET', '/api/priority/', true);
