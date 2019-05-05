@@ -55,7 +55,7 @@ def new_incident() -> jsonify:
 
 
 @mod_api.route('/agent/', methods=['GET'])
-@mod_api.route('/agent/<int:agent_id>', methods=['GET'])
+@mod_api.route('/agent/<agent_id>', methods=['GET'])
 def get_agents(agent_id: str = "") -> jsonify:
 	"""
 	Retrieve a list of all agents.
@@ -86,6 +86,7 @@ def get_agents(agent_id: str = "") -> jsonify:
 		new_agent = {}
 		new_agent['id'] = agent.id
 		new_agent['name'] = agent.name
+		new_agent['email_address'] = agent.email_address
 		agents.append(new_agent)
 	return jsonify({"Data":agents})
 
@@ -96,13 +97,36 @@ def new_agent() -> jsonify:
 	Adds a new agent and returns the agent_id
 	assigned.
 
+	Requires data sent as JSON
+	Name
+	email_address
+
 	Returns:
 		Returns agent_id of the new agent.
 	"""
 	new_agent = Agent()
+	post_data = request.json
+	print(post_data)
+	new_agent.name = post_data['agent']['name']
+	new_agent.email_address = post_data['agent']['email_address']
 	db.session.add(new_agent)
 	db.session.commit()
 	return jsonify({"Agent_ID":new_agent.id})
+
+
+@mod_api.route('/agent/<agent_id>', methods=['DELETE'])
+def delete_agent(agent_id: str = "") -> jsonify:
+	"""
+	Deletes the agent associated with the id passed in
+	the url
+
+	Returns the id of the agent deleted
+	"""
+	agent = db.session.query(Agent).filter_by(id=agent_id).one()
+	id = agent.id
+	db.session.delete(agent)
+	db.session.commit()
+	return jsonify({"Agent_ID":id})
 
 
 @mod_api.route('/department/', methods=['GET'])

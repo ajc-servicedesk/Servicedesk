@@ -14,17 +14,31 @@ def new_incident():
 
 def new_agent():
     url = 'http://127.0.0.1:5000/api/agent/'
-
-    r = requests.post(url)
+    import json, random, string
+    rand1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    data = {'agent': {'name': 'test{}'.format(rand1),
+                      'email_address': 'test{}@test.com'.format(rand1)},
+        }
+    print(data)
+    r = requests.post(url, json=data)
 
     # Response, status etc
     print(r.text)
     print(r.status_code)
 
-def get_agent(passthrough):
+def get_agent():
     url = 'http://127.0.0.1:5000/api/agent/'
 
     r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def delete_agent():
+    url = 'http://127.0.0.1:5000/api/agent/3'
+
+    r = requests.delete(url)
 
     # Response, status etc
     print(r.text)
@@ -196,8 +210,7 @@ def get_agent_group():
 
 def new_agent_group():
     url = 'http://127.0.0.1:5000/api/agent_group/'
-
-    r = requests.post(url)
+    r = requests.post(url, data = json.dumps(data))
 
     # Response, status etc
     print(r.text)
