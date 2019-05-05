@@ -146,6 +146,6 @@ class AgentGroup(db.Model):
 	date_created = db.Column(db.DateTime, default=db.func.current_timestamp())
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
 							  onupdate=db.func.current_timestamp())
-	agents = db.Column(db.Integer, db.ForeignKey('agent.id'), nullable=False)
+	agents = db.Column(db.Integer, db.ForeignKey('agent.id'), nullable=True)
 	name = db.Column(db.String(100))
-	incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
+	incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=True)
