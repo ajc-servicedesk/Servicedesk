@@ -9,19 +9,19 @@
 {% block content %}
 <h1>Administration</h1>
 <div class="row">
-    <div class="text-center col-md-3">
-        <h2>Incident Status</h2>
-        <table class="table table-sm" id="StatusTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th><button type="button" class="btn btn-primary btn-sm">New</button></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
+        <div class="text-center col-md-3">
+                <h2>Incident Status</h2>
+                <table class="table table-sm" id="IncidentStatusTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th><button type="button" id="NewIncidentStatusButton" class="btn btn-primary btn-sm" onclick="NewIncidentStatus()">New</button></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
     <div class="text-center col-md-3">
         <h2>Incident Priorities</h2>
         <table class="table table-sm" id="IncidentPriorityTable">
@@ -138,8 +138,97 @@
         };
         GETIncidentPriority.send();
     };
+    function NewIncidentStatus() {
+        /* Adds a new incidentpriority entry */
+        document.getElementById("NewIncidentStatusButton").style.display = "none"; // Hide New button
+        var IncidentStatusTable = document.getElementById('IncidentStatusTable').getElementsByTagName('tbody')[0];
+        var NewIncidentStatusRow =IncidentStatusTable.insertRow(IncidentStatusTable.rows.length);
+        NewIncidentStatusRow.id = "IncidentStatusRow";
+        var NewIncidentStatusNameTextboxCell = NewIncidentStatusRow.insertCell(0);
+        var NewIncidentStatusNameTextbox = document.createElement("input");
+        NewIncidentStatusNameTextbox.type = "text";
+        NewIncidentStatusNameTextbox.id="NewStatusNameTextbox"
+        NewIncidentStatusNameTextbox.className="form-control form-control-sm";
+        NewIncidentStatusNameTextboxCell.appendChild(NewIncidentStatusNameTextbox);
+
+        var NewIncidentStatusApplyButtonCell = NewIncidentStatusRow.insertCell(1);
+        var NewIncidentStatusApplyButton = document.createElement("input");
+        NewIncidentStatusApplyButton.type = "button";
+        NewIncidentStatusApplyButton.value="Apply"; 
+        NewIncidentStatusApplyButton.setAttribute("id", "NewStatusApplyButton");
+        NewIncidentStatusApplyButton.className="btn btn-primary btn-sm";
+        NewIncidentStatusApplyButton.onclick = function() { 
+            this.value = "Applying...";
+            var NewIncidentStatusRequest = new XMLHttpRequest();
+            NewIncidentStatusRequest.open('POST', '/api/status/', true);
+            NewIncidentStatusRequest.setRequestHeader("Content-Type", "application/json");
+            NewIncidentStatusRequest.onload = function() {
+                if (NewIncidentStatusRequest.status >= 200) {
+                    document.getElementById("NewIncidentStatusButton").style.display = "block";
+                    document.getElementById("IncidentStatusRow").remove();
+                    LoadIncidentStatusTable();
+                };
+            };
+            NewIncidentStatusRequest.onerror = function() {
+            };
+            NewIncidentStatusRequest.send(JSON.stringify({status: {name: document.getElementById("IncidentStatusRow").getElementsByTagName('td')[0].childNodes[0].value}}));
+            
+        };
+        NewIncidentStatusApplyButtonCell.appendChild(NewIncidentStatusApplyButton);
+    }
+
+    function LoadIncidentStatusTable() {
+        /* Loads all of the IncidentPriorities */
+        document.getElementById("NewIncidentStatusButton").style.display = "block";
+        var IncidentStatusTable = document.getElementById('IncidentStatusTable').getElementsByTagName('tbody')[0];
+        IncidentStatusTable.innerHTML = ""; // To ensure no entry is repeated
+        var GETIncidentStatus = new XMLHttpRequest();
+        GETIncidentStatus.open('GET', '/api/status/', true);
+        GETIncidentStatus.onload = function() {
+            if (GETIncidentStatus.status >= 200) {
+                var IncidentStatusList = JSON.parse(GETIncidentStatus.responseText);
+                var IncidentStatusList = IncidentStatusList['Data']
+                for (var i = 0; i < IncidentStatusList.length; i++) {
+                    var NewIncidentStatusRow =IncidentStatusTable.insertRow(IncidentStatusTable.rows.length);
+
+                    var IncidentStatusNameCell = NewIncidentStatusRow.insertCell(0);
+                    // Add ID of IncidentPriority to IncidentStatusNameCell
+                    IncidentStatusNameCell.id = 'IncidentStatus_' + IncidentStatusList[i].id
+
+                    var IncidentStatusNameData = document.createTextNode(IncidentStatusList[i].name);
+                    IncidentStatusNameCell.appendChild(IncidentStatusNameData);
+
+                    var IncidentStatusRemoveButtonRow = NewIncidentStatusRow.insertCell(1);
+                    var IncidentStatusRemoveButton = document.createElement("input");
+                    IncidentStatusRemoveButton.type = "button";
+                    IncidentStatusRemoveButton.name = "add";
+                    IncidentStatusRemoveButton.value="Remove";
+                    IncidentStatusRemoveButton.id = 'RemoveButton_' + IncidentStatusNameCell.id
+                    IncidentStatusRemoveButton.className="btn btn-danger btn-sm";
+                    IncidentStatusRemoveButton.onclick = function() {
+                        var IncidentStatusRemoveRequest = new XMLHttpRequest();
+                        var url = '/api/status/' + this.id.replace('RemoveButton_IncidentStatus_','')
+                        IncidentStatusRemoveRequest.open("DELETE", url, true);
+                        IncidentStatusRemoveRequest.onload = function () {
+                            var users = JSON.parse(IncidentStatusRemoveRequest.responseText);
+                            if (IncidentStatusRemoveRequest.readyState == 4 && IncidentStatusRemoveRequest.status == "200") {
+                                LoadIncidentStatusTable();
+                            } else {
+                            }
+                        }
+                        IncidentStatusRemoveRequest.send(null);
+                    };
+                    IncidentStatusRemoveButtonRow.appendChild(IncidentStatusRemoveButton);
+                };
+            };
+        };
+        GETIncidentStatus.onerror = function() {
+        };
+        GETIncidentStatus.send();
+    };
     window.onload = function() {
         LoadIncidentPriorityTable();
+        LoadIncidentStatusTable();
     };
 </script>
 {% endblock %}
