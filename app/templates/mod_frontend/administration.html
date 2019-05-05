@@ -35,6 +35,19 @@
             </tbody>
         </table>
     </div>
+    <div class="text-center col-md-3">
+            <h2>Incident Categories</h2>
+            <table class="table table-sm" id="IncidentCategoryTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th><button type="button" id="NewIncidentCategoryButton" class="btn btn-primary btn-sm" onclick="NewIncidentCategory()">New</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
 </div>
 	Agent Groups<br />
 	Requester Departments<br />
@@ -229,6 +242,100 @@
     window.onload = function() {
         LoadIncidentPriorityTable();
         LoadIncidentStatusTable();
+    };
+    /* ======================================= */
+    function NewIncidentCategory() {
+        /* Adds a new NewIncidentCategory entry */
+        document.getElementById("NewIncidentCategoryButton").style.display = "none"; // Hide New button
+        var IncidentCategoryTable = document.getElementById('IncidentCategoryTable').getElementsByTagName('tbody')[0];
+        var NewIncidentCategoryRow =IncidentCategoryTable.insertRow(IncidentCategoryTable.rows.length);
+        NewIncidentCategoryRow.id = "IncidentCategoryRow";
+        var NewIncidentCategoryNameTextboxCell = NewIncidentCategoryRow.insertCell(0);
+        var NewIncidentCategoryNameTextbox = document.createElement("input");
+        NewIncidentCategoryNameTextbox.type = "text";
+        NewIncidentCategoryNameTextbox.id="NewCategoryNameTextbox"
+        NewIncidentCategoryNameTextbox.className="form-control form-control-sm";
+        NewIncidentCategoryNameTextboxCell.appendChild(NewIncidentCategoryNameTextbox);
+
+        var NewIncidentCategoryApplyButtonCell = NewIncidentCategoryRow.insertCell(1);
+        var NewIncidentCategoryApplyButton = document.createElement("input");
+        NewIncidentCategoryApplyButton.type = "button";
+        NewIncidentCategoryApplyButton.value="Apply"; 
+        NewIncidentCategoryApplyButton.setAttribute("id", "NewCategoryApplyButton");
+        NewIncidentCategoryApplyButton.className="btn btn-primary btn-sm";
+        NewIncidentCategoryApplyButton.onclick = function() { 
+            this.value = "Applying...";
+            var NewIncidentCategoryRequest = new XMLHttpRequest();
+            NewIncidentCategoryRequest.open('POST', '/api/category/', true);
+            NewIncidentCategoryRequest.setRequestHeader("Content-Type", "application/json");
+            NewIncidentCategoryRequest.onload = function() {
+                if (NewIncidentCategoryRequest.status >= 200) {
+                    document.getElementById("NewIncidentCategoryButton").style.display = "block";
+                    document.getElementById("IncidentCategoryRow").remove();
+                    LoadIncidentCategoryTable();
+                };
+            };
+            NewIncidentCategoryRequest.onerror = function() {
+            };
+            NewIncidentCategoryRequest.send(JSON.stringify({category: {name: document.getElementById("IncidentCategoryRow").getElementsByTagName('td')[0].childNodes[0].value}}));
+            
+        };
+        NewIncidentCategoryApplyButtonCell.appendChild(NewIncidentCategoryApplyButton);
+    }
+
+    function LoadIncidentCategoryTable() {
+        /* Loads all of the IncidentPriorities */
+        document.getElementById("NewIncidentCategoryButton").style.display = "block";
+        var IncidentCategoryTable = document.getElementById('IncidentCategoryTable').getElementsByTagName('tbody')[0];
+        IncidentCategoryTable.innerHTML = ""; // To ensure no entry is repeated
+        var GETIncidentCategory = new XMLHttpRequest();
+        GETIncidentCategory.open('GET', '/api/category/', true);
+        GETIncidentCategory.onload = function() {
+            if (GETIncidentCategory.status >= 200) {
+                var IncidentCategoryList = JSON.parse(GETIncidentCategory.responseText);
+                var IncidentCategoryList = IncidentCategoryList['Data']
+                for (var i = 0; i < IncidentCategoryList.length; i++) {
+                    var NewIncidentCategoryRow =IncidentCategoryTable.insertRow(IncidentCategoryTable.rows.length);
+
+                    var IncidentCategoryNameCell = NewIncidentCategoryRow.insertCell(0);
+                    // Add ID of IncidentPriority to IncidentCategoryNameCell
+                    IncidentCategoryNameCell.id = 'IncidentCategory_' + IncidentCategoryList[i].id
+
+                    var IncidentCategoryNameData = document.createTextNode(IncidentCategoryList[i].name);
+                    IncidentCategoryNameCell.appendChild(IncidentCategoryNameData);
+
+                    var IncidentCategoryRemoveButtonRow = NewIncidentCategoryRow.insertCell(1);
+                    var IncidentCategoryRemoveButton = document.createElement("input");
+                    IncidentCategoryRemoveButton.type = "button";
+                    IncidentCategoryRemoveButton.name = "add";
+                    IncidentCategoryRemoveButton.value="Remove";
+                    IncidentCategoryRemoveButton.id = 'RemoveButton_' + IncidentCategoryNameCell.id
+                    IncidentCategoryRemoveButton.className="btn btn-danger btn-sm";
+                    IncidentCategoryRemoveButton.onclick = function() {
+                        var IncidentCategoryRemoveRequest = new XMLHttpRequest();
+                        var url = '/api/category/' + this.id.replace('RemoveButton_IncidentCategory_','')
+                        IncidentCategoryRemoveRequest.open("DELETE", url, true);
+                        IncidentCategoryRemoveRequest.onload = function () {
+                            var users = JSON.parse(IncidentCategoryRemoveRequest.responseText);
+                            if (IncidentCategoryRemoveRequest.readyState == 4 && IncidentCategoryRemoveRequest.status == "200") {
+                                LoadIncidentCategoryTable();
+                            } else {
+                            }
+                        }
+                        IncidentCategoryRemoveRequest.send(null);
+                    };
+                    IncidentCategoryRemoveButtonRow.appendChild(IncidentCategoryRemoveButton);
+                };
+            };
+        };
+        GETIncidentCategory.onerror = function() {
+        };
+        GETIncidentCategory.send();
+    };
+    window.onload = function() {
+        LoadIncidentPriorityTable();
+        LoadIncidentStatusTable();
+        LoadIncidentCategoryTable();
     };
 </script>
 {% endblock %}

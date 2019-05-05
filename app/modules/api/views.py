@@ -254,6 +254,8 @@ def new_category() -> jsonify:
 		Returns Category_ID, name of the new category.
 	"""
 	new_category = IncidentCategory()
+	post_data = request.json
+	new_category.name = post_data['category']['name']
 	db.session.add(new_category)
 	db.session.commit()
 	return jsonify({"Category_ID":new_category.id})
