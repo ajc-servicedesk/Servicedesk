@@ -28,80 +28,14 @@
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th><button type="button" id="NewPriorityButton" class="btn btn-primary btn-sm" onclick="NewPriorityonTable()">New</button></th>
+                    <th><button type="button" id="NewIncidentPriorityButton" class="btn btn-primary btn-sm" onclick="NewIncidentPriority()">New</button></th>
                 </tr>
             </thead>
             <tbody>
             </tbody>
         </table>
-    </div>
-    <div class="text-center col-md-3">
-        <h2>Agent Groups</h2>
-        <table class="table table-sm" id="AgentGroupsTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th><button type="button" class="btn btn-primary btn-sm">New</button></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-    <div class="text-center col-md-3">
-            <h2>Categories</h2>
-            <table class="table table-sm" id="CategoriesTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th><button type="button" class="btn btn-primary btn-sm">New</button></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
     </div>
 </div>
-
-<div class="row">
-        <div class="text-center col-md-2">
-            <h2>Incident Status</h2>
-            <table class="table table-sm" id="StatusTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <div class="text-center col-md-2">
-            <h2>Incident Priorities</h2>
-            <table class="table table-sm" id="PriorityTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-        <div class="text-center col-md-2">
-            <h2>Incident Status</h2>
-            <table class="table table-sm" id="StatusTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            </div>
-    </div>
-
 	Agent Groups<br />
 	Requester Departments<br />
 	Categories<br />
@@ -116,130 +50,93 @@
             };
         };
     };
-    function LoadStatusTable() {
-        var tableRef = document.getElementById('StatusTable').getElementsByTagName('tbody')[0];
-        var request = new XMLHttpRequest();
-        request.open('GET', '/api/status/', true);
-        request.onload = function() {
-            if (request.status >= 200) {
-                var data = JSON.parse(request.responseText);
-                var data = data['Data']
-                for (var i = 0; i < data.length; i++) {
-                    var newRow =tableRef.insertRow(tableRef.rows.length);
+    function NewIncidentPriority() {
+        document.getElementById("NewIncidentPriorityButton").style.display = "none"; // Hide New button
+        var IncidentPriorityTable = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
+        var NewIncidentPriorityRow =IncidentPriorityTable.insertRow(IncidentPriorityTable.rows.length);
+        NewIncidentPriorityRow.id = "IncidentPriorityRow";
+        var NewIncidentPriorityNameTextboxCell = NewIncidentPriorityRow.insertCell(0);
+        var NewIncidentPriorityNameTextbox = document.createElement("input");
+        NewIncidentPriorityNameTextbox.type = "text";
+        NewIncidentPriorityNameTextbox.id="NewPriorityNameTextbox"
+        NewIncidentPriorityNameTextbox.className="form-control form-control-sm";
+        NewIncidentPriorityNameTextboxCell.appendChild(NewIncidentPriorityNameTextbox);
 
-                    var name_cell = newRow.insertCell(0);
-                    var name_data = document.createTextNode(data[i].name);
-                    name_cell.appendChild(name_data);
-
-                    var delete_button_cell = newRow.insertCell(1);
-                    var element3 = document.createElement("input");
-                    element3.type = "button";
-                    element3.name = "add";
-                    element3.value="Remove";
-                    element3.className="btn btn-danger btn-sm";
-                    delete_button_cell.appendChild(element3);
-                    
-                    
-                };
-            };
-        };
-        request.onerror = function() {
-            console.log("StatusTable Error");
-        };
-        request.send();
-    };
-
-    function NewPriorityonTable() {
-        document.getElementById("NewPriorityButton").style.display = "none";
-        var tableRef = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
-        var newRow =tableRef.insertRow(tableRef.rows.length);
-        newRow.id = "NewPriorityRow";
-        var name_cell = newRow.insertCell(0);
-        var name_data = document.createElement("input");
-        name_data.type = "text";
-        name_data.id="NewPriorityNameTextbox"
-        name_data.className="form-control form-control-sm";
-        name_cell.appendChild(name_data);
-
-        var apply_cell = newRow.insertCell(1);
-        var apply_data = document.createElement("input");
-        apply_data.type = "button";
-        apply_data.value="Apply"; 
-        apply_data.setAttribute("id", "NewPriorityApplyButton");
-        apply_data.className="btn btn-primary btn-sm";
-        apply_data.onclick = function() { 
+        var NewIncidentPriorityApplyButtonCell = NewIncidentPriorityRow.insertCell(1);
+        var NewIncidentPriorityApplyButton = document.createElement("input");
+        NewIncidentPriorityApplyButton.type = "button";
+        NewIncidentPriorityApplyButton.value="Apply"; 
+        NewIncidentPriorityApplyButton.setAttribute("id", "NewPriorityApplyButton");
+        NewIncidentPriorityApplyButton.className="btn btn-primary btn-sm";
+        NewIncidentPriorityApplyButton.onclick = function() { 
             this.value = "Applying...";
-            var request = new XMLHttpRequest();
-            request.open('POST', '/api/priority/', true);
-            request.setRequestHeader("Content-Type", "application/json");
-            request.onload = function() {
-                if (request.status >= 200) {
-                    document.getElementById("NewPriorityButton").style.display = "block";
-                    document.getElementById("NewPriorityRow").remove();
+            var NewIncidentPriorityRequest = new XMLHttpRequest();
+            NewIncidentPriorityRequest.open('POST', '/api/priority/', true);
+            NewIncidentPriorityRequest.setRequestHeader("Content-Type", "application/json");
+            NewIncidentPriorityRequest.onload = function() {
+                if (NewIncidentPriorityRequest.status >= 200) {
+                    document.getElementById("NewIncidentPriorityButton").style.display = "block";
+                    document.getElementById("IncidentPriorityRow").remove();
                     LoadPriorityTable();
                 };
             };
-            request.onerror = function() {
-                console.log("PriorityTable Error");
+            NewIncidentPriorityRequest.onerror = function() {
             };
-            request.send(JSON.stringify({priority: {name: document.getElementById("NewPriorityRow").getElementsByTagName('td')[0].childNodes[0].value}}));
+            NewIncidentPriorityRequest.send(JSON.stringify({priority: {name: document.getElementById("IncidentPriorityRow").getElementsByTagName('td')[0].childNodes[0].value}}));
             
         };
-        apply_cell.appendChild(apply_data);
+        NewIncidentPriorityApplyButtonCell.appendChild(NewIncidentPriorityApplyButton);
     }
 
     function LoadPriorityTable() {
-        var tableRef = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
-        tableRef.innerHTML = "";
-        var request = new XMLHttpRequest();
-        request.open('GET', '/api/priority/', true);
-        request.onload = function() {
-            if (request.status >= 200) {
-                var data = JSON.parse(request.responseText);
-                var data = data['Data']
-                for (var i = 0; i < data.length; i++) {
-                    var newRow =tableRef.insertRow(tableRef.rows.length);
+        document.getElementById("NewIncidentPriorityButton").style.display = "block";
+        var IncidentPriorityTable = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
+        IncidentPriorityTable.innerHTML = ""; // To ensure no entry is repeated
+        var GETIncidentPriority = new XMLHttpRequest();
+        GETIncidentPriority.open('GET', '/api/priority/', true);
+        GETIncidentPriority.onload = function() {
+            if (GETIncidentPriority.status >= 200) {
+                var IncidentPriorityList = JSON.parse(GETIncidentPriority.responseText);
+                var IncidentPriorityList = IncidentPriorityList['Data']
+                for (var i = 0; i < IncidentPriorityList.length; i++) {
+                    var NewIncidentPriorityRow =IncidentPriorityTable.insertRow(IncidentPriorityTable.rows.length);
 
-                    var name_cell = newRow.insertCell(0);
-                    name_cell.id = 'priority_' + data[i].id
-                    var name_data = document.createTextNode(data[i].name);
-                    name_cell.appendChild(name_data);
+                    var IncidentPriorityNameCell = NewIncidentPriorityRow.insertCell(0);
+                    // Add ID of IncidentPriority to IncidentPriorityNameCell
+                    IncidentPriorityNameCell.id = 'IncidentPriority_' + IncidentPriorityList[i].id
 
-                    var delete_button_cell = newRow.insertCell(1);
-                    var element3 = document.createElement("input");
-                    element3.type = "button";
-                    element3.name = "add";
-                    element3.value="Remove";
-                    element3.id = 'remove_' + name_cell.id
-                    element3.className="btn btn-danger btn-sm";
-                    element3.onclick = function() {
-                        console.log("Trying to remove entry");
-                        var request = new XMLHttpRequest();
-                        var url = '/api/priority/' + this.id.replace('remove_priority_','')
-                        request.open("DELETE", url, true);
-                        request.onload = function () {
-                            var users = JSON.parse(request.responseText);
-                            console.log(request.responseText);
-                            if (request.readyState == 4 && request.status == "200") {
-                                console.log("Completed");
+                    var IncidentPriorityNameData = document.createTextNode(IncidentPriorityList[i].name);
+                    IncidentPriorityNameCell.appendChild(IncidentPriorityNameData);
+
+                    var IncidentPriorityRemoveButtonRow = NewIncidentPriorityRow.insertCell(1);
+                    var IncidentPriorityRemoveButton = document.createElement("input");
+                    IncidentPriorityRemoveButton.type = "button";
+                    IncidentPriorityRemoveButton.name = "add";
+                    IncidentPriorityRemoveButton.value="Remove";
+                    IncidentPriorityRemoveButton.id = 'RemoveButton_' + IncidentPriorityNameCell.id
+                    IncidentPriorityRemoveButton.className="btn btn-danger btn-sm";
+                    IncidentPriorityRemoveButton.onclick = function() {
+                        var IncidentPriorityRemoveRequest = new XMLHttpRequest();
+                        var url = '/api/priority/' + this.id.replace('RemoveButton_IncidentPriority_','')
+                        IncidentPriorityRemoveRequest.open("DELETE", url, true);
+                        IncidentPriorityRemoveRequest.onload = function () {
+                            var users = JSON.parse(IncidentPriorityRemoveRequest.responseText);
+                            if (IncidentPriorityRemoveRequest.readyState == 4 && IncidentPriorityRemoveRequest.status == "200") {
                                 LoadPriorityTable();
                             } else {
-                                console.error("There was an error.");
                             }
                         }
-                        request.send(null);
+                        IncidentPriorityRemoveRequest.send(null);
                     };
-                    delete_button_cell.appendChild(element3);
+                    IncidentPriorityRemoveButtonRow.appendChild(IncidentPriorityRemoveButton);
                 };
             };
         };
-        request.onerror = function() {
-            console.log("PriorityTable Error");
+        GETIncidentPriority.onerror = function() {
         };
-        request.send();
+        GETIncidentPriority.send();
     };
     window.onload = function() {
-        LoadStatusTable();
         LoadPriorityTable();
     };
 </script>
