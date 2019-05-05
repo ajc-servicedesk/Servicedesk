@@ -46,6 +46,16 @@
 <div class="section" id="module-app.modules.api.views">
 <span id="api"></span><h1>api<a class="headerlink" href="#module-app.modules.api.views" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="app.modules.api.views.get_agent_group">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_agent_group</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_agent_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_agent_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all agent_group.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns name and id of agent_group</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="app.modules.api.views.get_agents">
 <code class="descclassname">app.modules.api.views.</code><code class="descname">get_agents</code><span class="sig-paren">(</span><em>agent_id: str = ''</em><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_agents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_agents" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a list of all agents.
@@ -61,13 +71,52 @@ Retrieve json data on an agent and return. ID required.</p>
 <dt>Returns:</dt><dd><p>Returns json message.</p>
 <dl>
 <dt>{</dt><dd><dl class="simple">
-<dt>“Data”: {</dt><dd><p>“id”: “1”</p>
+<dt>“Data”: [</dt><dd><p>{
+“id”: 1
+}</p>
+</dd>
+</dl>
+<p>]</p>
 </dd>
 </dl>
 <p>}</p>
 </dd>
 </dl>
-<p>}</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.get_category">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all categories.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns name and id of category</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.get_department">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_department</code><span class="sig-paren">(</span><em>department_id: str = ''</em><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_department"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_department" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all departments.
+Retrieve json data on an department and return. ID required.</p>
+<dl class="simple">
+<dt>Args</dt><dd><dl class="field-list simple">
+<dt class="field-odd">department_id (str)</dt>
+<dd class="field-odd"><p>Unique ID for the ticket. (Optional)</p>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>Returns json message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.get_impact">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_impact</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_impact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_impact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all impact.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns name and id of impact</p>
 </dd>
 </dl>
 </dd></dl>
@@ -100,6 +149,46 @@ Retrieve json data on an incident and return. ID required.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="app.modules.api.views.get_priority">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_priority"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all priority.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns name and id of priority</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.get_status">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all statuses.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns name and id of status</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.get_sub_category">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_sub_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_sub_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all sub_category.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns name and id of sub_category</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.get_urgency">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">get_urgency</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#get_urgency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.get_urgency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a list of all urgency.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns name and id of urgency</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="app.modules.api.views.new_agent">
 <code class="descclassname">app.modules.api.views.</code><code class="descname">new_agent</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_agent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new agent and returns the agent_id
@@ -111,12 +200,100 @@ assigned.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="app.modules.api.views.new_agent_group">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_agent_group</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_agent_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_agent_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new agent_group and returns the agent_group_id
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns agent_group_id, name of the new agent_group.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.new_category">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new category and returns the Category_ID
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns Category_ID, name of the new category.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.new_department">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_department</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_department"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_department" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new department and returns the agent_id
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns agent_id of the new department.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.new_impact">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_impact</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_impact"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_impact" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new impact and returns the impact_id
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns impact_id, name of the new impact.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="app.modules.api.views.new_incident">
 <code class="descclassname">app.modules.api.views.</code><code class="descname">new_incident</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_incident"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_incident" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a new incident and returns the incident_id
 assigned.</p>
 <dl class="simple">
 <dt>Returns:</dt><dd><p>Returns incident_id of the new ticket entry.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.new_priority">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_priority</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_priority"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_priority" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new priority and returns the priority_id
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns priority_id, name of the new priority.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.new_status">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new status and returns the status_id
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns status_id, name of the new status.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.new_sub_category">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_sub_category</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_sub_category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_sub_category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new sub_category and returns the sub_category_id
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns sub_category_id, name of the new sub_category.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="app.modules.api.views.new_urgency">
+<code class="descclassname">app.modules.api.views.</code><code class="descname">new_urgency</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; flask.json.jsonify<a class="reference internal" href="_modules/app/modules/api/views.html#new_urgency"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.modules.api.views.new_urgency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new urgency and returns the urgency_id
+assigned.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Returns urgency_id, name of the new urgency.</p>
 </dd>
 </dl>
 </dd></dl>
