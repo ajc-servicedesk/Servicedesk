@@ -76,5 +76,24 @@ def new_category():
     print(r.status_code)
 
 
+def get_status():
+    url = 'https://apt-servicedesk.azurewebsites.net/api/status/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def new_status():
+    url = 'https://apt-servicedesk.azurewebsites.net/api/status/'
+
+    r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+
 if __name__ == '__main__':
     globals()[sys.argv[1]]()
