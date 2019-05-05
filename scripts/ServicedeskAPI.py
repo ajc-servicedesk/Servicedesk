@@ -1,6 +1,7 @@
 import sys, requests
 
 
+
 def test():
     print("Hello - test.")
 
@@ -12,7 +13,7 @@ def new_incident():
     print(r.status_code)
 
 def new_agent():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/agent/'
+    url = 'http://127.0.0.1:5000/api/agent/'
 
     r = requests.post(url)
 
@@ -21,7 +22,7 @@ def new_agent():
     print(r.status_code)
 
 def get_agent(passthrough):
-    url = 'https://apt-servicedesk.azurewebsites.net/api/agent/'
+    url = 'http://127.0.0.1:5000/api/agent/'
 
     r = requests.get(url)
 
@@ -30,7 +31,7 @@ def get_agent(passthrough):
     print(r.status_code)
 
 def get_incident():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/incident/'
+    url = 'http://127.0.0.1:5000/api/incident/'
 
     r = requests.get(url)
 
@@ -39,7 +40,7 @@ def get_incident():
     print(r.status_code)
 
 def get_department():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/department/'
+    url = 'http://127.0.0.1:5000/api/department/'
 
     r = requests.get(url)
 
@@ -48,7 +49,7 @@ def get_department():
     print(r.status_code)
 
 def new_department():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/department/'
+    url = 'http://127.0.0.1:5000/api/department/'
 
     r = requests.post(url)
 
@@ -58,7 +59,7 @@ def new_department():
 
 
 def get_category():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/category/'
+    url = 'http://127.0.0.1:5000/api/category/'
 
     r = requests.get(url)
 
@@ -67,7 +68,7 @@ def get_category():
     print(r.status_code)
 
 def new_category():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/category/'
+    url = 'http://127.0.0.1:5000/api/category/'
 
     r = requests.post(url)
 
@@ -77,7 +78,7 @@ def new_category():
 
 
 def get_status():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/status/'
+    url = 'http://127.0.0.1:5000/api/status/'
 
     r = requests.get(url)
 
@@ -86,7 +87,7 @@ def get_status():
     print(r.status_code)
 
 def new_status():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/status/'
+    url = 'http://127.0.0.1:5000/api/status/'
 
     r = requests.post(url)
 
@@ -94,8 +95,8 @@ def new_status():
     print(r.text)
     print(r.status_code)
 
-def get_prority():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/priority/'
+def get_priority():
+    url = 'http://127.0.0.1:5000/api/priority/'
 
     r = requests.get(url)
 
@@ -104,7 +105,97 @@ def get_prority():
     print(r.status_code)
 
 def new_priority():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/priority/'
+    url = 'http://127.0.0.1:5000/api/priority/'
+
+    r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def get_impact():
+    url = 'http://127.0.0.1:5000/api/impact/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def new_impact():
+    url = 'http://127.0.0.1:5000/api/impact/'
+
+    r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def get_sub_category():
+    url = 'http://127.0.0.1:5000/api/sub_category/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def new_sub_category():
+    url = 'http://127.0.0.1:5000/api/sub_category/'
+
+    r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def get_urgency():
+    url = 'http://127.0.0.1:5000/api/urgency/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def new_urgency():
+    url = 'http://127.0.0.1:5000/api/urgency/'
+
+    r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def get_requester():
+    url = 'http://127.0.0.1:5000/api/requester/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def new_requester():
+    url = 'http://127.0.0.1:5000/api/requester/'
+
+    r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def get_agent_group():
+    url = 'http://127.0.0.1:5000/api/agent_group/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def new_agent_group():
+    url = 'http://127.0.0.1:5000/api/agent_group/'
 
     r = requests.post(url)
 

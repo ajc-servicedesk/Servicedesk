@@ -245,3 +245,135 @@ def new_priority() -> jsonify:
 	db.session.add(new_priority)
 	db.session.commit()
 	return jsonify({"priority_id":new_priority.id})
+
+
+@mod_api.route('/impact/', methods=['GET'])
+def get_impact() -> jsonify:
+	"""
+	Retrieve a list of all impact.
+
+	Returns:
+		Returns name and id of impact
+	"""
+	impacts = []
+	impact_results = db.session.query(IncidentImpact).all()
+	for impact in impact_results:
+		new_impact = {}
+		new_impact['id'] = impact.id
+		new_impact['name'] = impact.name
+		impacts.append(new_impact)
+	return jsonify({"Data":impacts})
+
+
+@mod_api.route('/impact/', methods=['POST'])
+def new_impact() -> jsonify:
+	"""
+	Adds a new impact and returns the impact_id
+	assigned.
+
+	Returns:
+		Returns impact_id, name of the new impact.
+	"""
+	new_impact = IncidentImpact()
+	db.session.add(new_impact)
+	db.session.commit()
+	return jsonify({"impact_id":new_impact.id})
+
+
+@mod_api.route('/sub_category/', methods=['GET'])
+def get_sub_category() -> jsonify:
+	"""
+	Retrieve a list of all sub_category.
+
+	Returns:
+		Returns name and id of sub_category
+	"""
+	sub_categories = []
+	sub_category_results = db.session.query(IncidentSubCategory).all()
+	for sub_category in sub_category_results:
+		new_sub_category = {}
+		new_sub_category['id'] = prisub_categoryority.id
+		new_sub_category['name'] = sub_category.name
+		sub_categories.append(new_sub_category)
+	return jsonify({"Data":sub_categories})
+
+
+@mod_api.route('/sub_category/', methods=['POST'])
+def new_sub_category() -> jsonify:
+	"""
+	Adds a new sub_category and returns the sub_category_id
+	assigned.
+
+	Returns:
+		Returns sub_category_id, name of the new sub_category.
+	"""
+	new_sub_category = IncidentSubCategory()
+	db.session.add(new_sub_category)
+	db.session.commit()
+	return jsonify({"sub_category_id":new_sub_category.id})
+
+
+@mod_api.route('/urgency/', methods=['GET'])
+def get_urgency() -> jsonify:
+	"""
+	Retrieve a list of all urgency.
+
+	Returns:
+		Returns name and id of urgency
+	"""
+	urgencies = []
+	urgency_results = db.session.query(IncidentUrgency).all()
+	for urgency in urgency_results:
+		new_urgency = {}
+		new_urgency['id'] = urgency.id
+		new_urgency['name'] = urgency.name
+		urgencies.append(new_urgency)
+	return jsonify({"Data":urgencies})
+
+
+@mod_api.route('/urgency/', methods=['POST'])
+def new_urgency() -> jsonify:
+	"""
+	Adds a new urgency and returns the urgency_id
+	assigned.
+
+	Returns:
+		Returns urgency_id, name of the new urgency.
+	"""
+	new_urgency = IncidentUrgency()
+	db.session.add(new_urgency)
+	db.session.commit()
+	return jsonify({"urgency_id":new_urgency.id})
+
+
+@mod_api.route('/agent_group/', methods=['GET'])
+def get_agent_group() -> jsonify:
+	"""
+	Retrieve a list of all agent_group.
+
+	Returns:
+		Returns name and id of agent_group
+	"""
+	agent_groups = []
+	agent_group_results = db.session.query(AgentGroup).all()
+	for agent_group in agent_group_results:
+		new_agent_group = {}
+		new_agent_group['id'] = agent_group.id
+		new_agent_group['name'] = agent_group.name
+		agent_groups.append(new_agent_group)
+	return jsonify({"Data":agent_groups})
+
+
+@mod_api.route('/agent_group/', methods=['POST'])
+def new_agent_group() -> jsonify:
+	"""
+	Adds a new agent_group and returns the agent_group_id
+	assigned.
+
+	Returns:
+		Returns agent_group_id, name of the new agent_group.
+	"""
+	new_agent_group = AgentGroup()
+	db.session.add(new_agent_group)
+	db.session.commit()
+	return jsonify({"agent_group_id":new_agent_group.id})

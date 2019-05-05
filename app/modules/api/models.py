@@ -77,7 +77,7 @@ class IncidentImpact(db.Model):
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
 							  onupdate=db.func.current_timestamp())
 	name = db.Column(db.String(100))
-	incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
+	incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=True)
 
 
 class IncidentSubCategory(db.Model):
@@ -88,7 +88,7 @@ class IncidentSubCategory(db.Model):
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
 							  onupdate=db.func.current_timestamp())
 	name = db.Column(db.String(100))
-	incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
+	incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=True)
 	category = db.Column(db.Integer, db.ForeignKey('incident_category.id'), nullable=False)
 
 
