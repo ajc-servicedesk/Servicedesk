@@ -7,7 +7,7 @@ from app.modules.api.models import *
 mod_api = Blueprint('api', __name__, url_prefix='/api')
 
 @mod_api.route('/incident/', methods=['GET'])
-@mod_api.route('/incident/<int:incident_id>', methods=['GET'])
+@mod_api.route('/incident/<incident_id>', methods=['GET'])
 def get_incidents(incident_id: str = "") -> jsonify:
 	"""
 	Retrieve a list of all incidents (default=last100).
@@ -20,21 +20,21 @@ def get_incidents(incident_id: str = "") -> jsonify:
 	Returns:
 		Returns json message.
 
-		{"Data": {
-				"id": "1"
-				}
-		}
-
 	"""
 	incidents = []
 	if incident_id != "":
-		print("Do the search with the ID")
 		incident_results = db.session.query(Incident).filter_by(id = incident_id).all()
 	else:
 		incident_results = db.session.query(Incident).all()
 	for incident in incident_results:
 		new_incident = {}
 		new_incident['id'] = incident.id
+		try:
+			new_incident['status'] = incident.status[0].name
+		except:
+			pass
+		new_incident['subject'] = incident.subject
+		new_incident['description'] = incident.description
 		incidents.append(new_incident)
 	return jsonify({"Data":incidents})
 
@@ -49,9 +49,49 @@ def new_incident() -> jsonify:
 		Returns incident_id of the new ticket entry.
 	"""
 	new_incident = Incident()
+	post_data = request.json
+	print(post_data)
+	if 'incident' not in post_data:
+		return jsonify({"Error": "No incident data"})
+	print("3")
+	print(post_data['incident'])
+	if 'status' in post_data['incident']:
+		try:
+			status1 = db.session.query(IncidentStatus).filter_by(id=post_data['incident']['status']).one()
+			new_incident.status.append(status1)
+			db.session.commit()
+		except:
+			return jsonify({"Error": "couldn't find the status"})
+
+	if 'priority' in post_data['incident'] and post_data['incident']['priority'] != '':
+		new_incident.priority = post_data['incident']['priority']
+
+	if 'agent_group' in post_data['incident'] and post_data['incident']['agent_group'] != '':
+		new_incident.agent_group = post_data['incident']['agent_group']
+
+	if 'agent_assigned' in post_data['incident'] and post_data['incident']['agent_assigned'] != '':
+		new_incident.agent_assigned = post_data['incident']['agent_assigned']
+
+	if 'department' in post_data['incident'] and post_data['incident']['department'] != '':
+		new_incident.department = post_data['incident']['department']
+
+	if 'category' in post_data['incident'] and post_data['incident']['category'] != '':
+		new_incident.category = post_data['incident']['category']
+
+	if 'sub_category' in post_data['incident'] and post_data['incident']['sub_category'] != '':
+		new_incident.sub_category = post_data['incident']['sub_category']
+
+	if 'requester' in post_data['incident'] and post_data['incident']['requester'] != '':
+		new_incident.requester = post_data['incident']['requester']
+
+	if 'subject' in post_data['incident'] and post_data['incident']['subject'] != '':
+		new_incident.subject = post_data['incident']['subject']
+
+	if 'description' in post_data['incident'] and post_data['incident']['description'] != '':
+		new_incident.description = post_data['incident']['description']
 	db.session.add(new_incident)
 	db.session.commit()
-	return jsonify({"Ticket_ID":new_incident.id})
+	return jsonify({"Incident_ID":new_incident.id})
 
 
 @mod_api.route('/agent/', methods=['GET'])
@@ -262,6 +302,12 @@ def new_status() -> jsonify:
 		Returns status_id, name of the new status.
 	"""
 	new_status = IncidentStatus()
+	post_data = request.json
+	if 'status' in post_data:
+		if 'name' in post_data['status']:
+			new_status.name = post_data['status']['name']
+	else:
+		return jsonify({"Error": "no status data"})
 	db.session.add(new_status)
 	db.session.commit()
 	return jsonify({"Status_ID":new_status.id})

@@ -1,20 +1,30 @@
-import sys, requests
-
-
+import sys, requests, json, random, string
 
 def test():
     print("Hello - test.")
 
 def new_incident():
-    r = requests.post(url)
-
-    # Response, status etc
+    url = 'http://127.0.0.1:5000/api/incident/'
+    rand1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    data = {'incident': {'subject': '{}'.format(rand1),
+                         'description': '{}@test.com'.format(rand1),
+                         'priority': '',
+                         'status': '2',
+                         'agent_group': '',
+                         'agent_assigned': '',
+                         'department': '',
+                         'category': '',
+                         'sub_category': '',
+                         'requester': ''}
+        }
+    print(data)
+    r = requests.post(url, json=data)
     print(r.text)
     print(r.status_code)
 
 def new_agent():
     url = 'http://127.0.0.1:5000/api/agent/'
-    import json, random, string
+
     rand1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
     data = {'agent': {'name': 'test{}'.format(rand1),
                       'email_address': 'test{}@test.com'.format(rand1)},
@@ -102,8 +112,8 @@ def get_status():
 
 def new_status():
     url = 'http://127.0.0.1:5000/api/status/'
-
-    r = requests.post(url)
+    data = {'status': {'name': 'Open'}}
+    r = requests.post(url, json=data)
 
     # Response, status etc
     print(r.text)
