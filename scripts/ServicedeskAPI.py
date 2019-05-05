@@ -58,7 +58,7 @@ def new_department():
 
 
 def get_category():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/category/'
+    url = 'http://apt-servicedesk.azurewebsites.net/api/category/'
 
     r = requests.get(url)
 
@@ -67,7 +67,7 @@ def get_category():
     print(r.status_code)
 
 def new_category():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/category/'
+    url = 'http://127.0.0.1:5000/api/category/'
 
     r = requests.post(url)
 
