@@ -166,7 +166,7 @@ def get_category() -> jsonify:
 	return jsonify({"Data":categories})
 
 
-@mod_api.route('/department/', methods=['POST'])
+@mod_api.route('/category/', methods=['POST'])
 def new_category() -> jsonify:
 	"""
 	Adds a new category and returns the Category_ID
@@ -175,7 +175,7 @@ def new_category() -> jsonify:
 	Returns:
 		Returns Category_ID, name of the new category.
 	"""
-	new_category = RequesterDepartment()
+	new_category = IncidentCategory()
 	db.session.add(new_category)
 	db.session.commit()
 	return jsonify({"Category_ID":new_category.id})
