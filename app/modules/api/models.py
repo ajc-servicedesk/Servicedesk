@@ -135,8 +135,8 @@ class RequesterDepartment(db.Model):
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
 							  onupdate=db.func.current_timestamp())
 	name = db.Column(db.String(100))
-	requesters = db.Column(db.Integer, db.ForeignKey('requester.id'), nullable=False)
-	incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
+	requesters = db.Column(db.Integer, db.ForeignKey('requester.id'), nullable=True)
+	incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=True)
 
 
 class AgentGroup(db.Model):

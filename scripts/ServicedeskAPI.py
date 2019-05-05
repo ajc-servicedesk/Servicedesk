@@ -39,6 +39,24 @@ def get_incident():
     print(r.text)
     print(r.status_code)
 
+def get_department():
+    url = 'https://apt-servicedesk.azurewebsites.net/api/department/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def new_department():
+    url = 'https://apt-servicedesk.azurewebsites.net/api/department/'
+
+    r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
 
 if __name__ == '__main__':
     globals()[sys.argv[1]]()

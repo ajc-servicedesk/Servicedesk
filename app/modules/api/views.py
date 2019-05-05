@@ -104,3 +104,45 @@ def new_agent() -> jsonify:
 	db.session.add(new_agent)
 	db.session.commit()
 	return jsonify({"Agent_ID":new_agent.id})
+
+
+@mod_api.route('/department/', methods=['GET'])
+@mod_api.route('/department/<int:department_id>', methods=['GET'])
+def get_department(department_id: str = "") -> jsonify:
+	"""
+	Retrieve a list of all departments.
+	Retrieve json data on an department and return. ID required.
+
+	Args
+		:department_id (str): Unique ID for the ticket. (Optional)
+
+	Returns:
+		Returns json message.
+	"""
+	departments = []
+	if department_id != "":
+		print("Do the search with the ID")
+		department_results = db.session.query(RequesterDepartment).filter_by(id = department_id).all()
+	else:
+		department_results = db.session.query(RequesterDepartment).all()
+	for department in department_results:
+		new_department = {}
+		new_department['id'] = department.id
+		new_department['name'] = department.name
+		departments.append(new_department)
+	return jsonify({"Data":departments})
+
+
+@mod_api.route('/department/', methods=['POST'])
+def new_department() -> jsonify:
+	"""
+	Adds a new department and returns the agent_id
+	assigned.
+
+	Returns:
+		Returns agent_id of the new department.
+	"""
+	new_department = RequesterDepartment()
+	db.session.add(new_department)
+	db.session.commit()
+	return jsonify({"Department_ID":new_department.id})
