@@ -20,10 +20,9 @@ def get_incidents(incident_id: str = "") -> jsonify:
 	Returns:
 		Returns json message.
 
-		{
-			"Data": {
+		{"Data": {
 				"id": "1"
-			}
+				}
 		}
 
 	"""
