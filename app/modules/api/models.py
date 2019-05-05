@@ -56,6 +56,7 @@ class IncidentNote(db.Model):
 	email = db.Column(db.Integer) # 1 for email, 0 for no email
 	incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
 
+
 class IncidentCategory(db.Model):
 	"""
 	"""
@@ -64,7 +65,7 @@ class IncidentCategory(db.Model):
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
 							  onupdate=db.func.current_timestamp())
 	name = db.Column(db.String(100))
-	incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
+	incident_id = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=True)
 	sub_categories = db.relationship('IncidentSubCategory', backref='incidentcategory', lazy=True)
 
 
