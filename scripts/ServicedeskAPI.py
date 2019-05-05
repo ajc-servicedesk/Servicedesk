@@ -22,7 +22,7 @@ def new_agent():
     print(r.status_code)
 
 def get_agent():
-    url = 'http://127.0.0.1:5000/api/agent/'
+    url = 'https://apt-servicedesk.azurewebsites.net/api/agent/'
 
     r = requests.get(url)
 
