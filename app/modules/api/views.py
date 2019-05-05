@@ -157,7 +157,7 @@ def get_category() -> jsonify:
 		Returns name and id of category
 	"""
 	categories = []
-	category_results = db.session.query(IncidentCategories).all()
+	category_results = db.session.query(IncidentCategory).all()
 	for category in category_results:
 		new_category = {}
 		new_category['id'] = category.id
