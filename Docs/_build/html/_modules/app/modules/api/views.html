@@ -39,7 +39,7 @@
 <span class="c1"># Define the blueprint: &#39;auth&#39;, set its url prefix: app.url/auth</span>
 <span class="n">mod_api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="get_incidents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_incidents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="get_incidents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_incidents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 <span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident/&lt;int:incident_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_incidents</span><span class="p">(</span><span class="n">incident_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -53,15 +53,19 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		Returns json message.</span>
 
-<span class="sd">	{</span>
-<span class="sd">		&quot;Data&quot;: {</span>
-<span class="sd">			&quot;id&quot;: &quot;1&quot;</span>
+<span class="sd">		{</span>
+<span class="sd">			&quot;Data&quot;: {</span>
+<span class="sd">				&quot;id&quot;: &quot;1&quot;</span>
+<span class="sd">			}</span>
 <span class="sd">		}</span>
-<span class="sd">	}</span>
 
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">incidents</span> <span class="o">=</span> <span class="p">[]</span>
-	<span class="n">incident_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Incident</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">incident_id</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Do the search with the ID&quot;</span><span class="p">)</span>
+		<span class="n">incident_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Incident</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">incident_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">incident_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Incident</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 	<span class="k">for</span> <span class="n">incident</span> <span class="ow">in</span> <span class="n">incident_results</span><span class="p">:</span>
 		<span class="n">new_incident</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="n">new_incident</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">incident</span><span class="o">.</span><span class="n">id</span>
@@ -69,7 +73,7 @@
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Data&quot;</span><span class="p">:</span><span class="n">incidents</span><span class="p">})</span></div>
 
 
-<div class="viewcode-block" id="new_incident"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.new_incident">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="new_incident"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.new_incident">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">new_incident</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Adds a new incident and returns the incident_id</span>
@@ -84,20 +88,52 @@
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Ticket_ID&quot;</span><span class="p">:</span><span class="n">new_incident</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 
 
-<div class="viewcode-block" id="get_agents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_agents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agents/&lt;int:agent_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="get_agents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_agents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent/&lt;int:agent_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_agents</span><span class="p">(</span><span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Retrieves a list of all agents and returns the basic information</span>
-<span class="sd">	for each agent. Further API calls would be required to get further</span>
-<span class="sd">	information.</span>
+<span class="sd">	Retrieve a list of all agents.</span>
+<span class="sd">	Filter on the url to get agents for a group (e.g. /agent?group=examplegroup)</span>
+<span class="sd">	Retrieve json data on an agent and return. ID required.</span>
 
 <span class="sd">	Args</span>
-<span class="sd">		:agent_id (str): Unique ID for the ticket.</span>
+<span class="sd">		:agent_id (str): Unique ID for the ticket. (Optional)</span>
 
 <span class="sd">	Returns:</span>
 <span class="sd">		Returns json message.</span>
+
+<span class="sd">		{</span>
+<span class="sd">			&quot;Data&quot;: {</span>
+<span class="sd">				&quot;id&quot;: &quot;1&quot;</span>
+<span class="sd">			}</span>
+<span class="sd">		}</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;test&quot;</span><span class="p">:</span><span class="s2">&quot;test&quot;</span><span class="p">})</span></div>
+	<span class="n">agents</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">if</span> <span class="n">agent_id</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Do the search with the ID&quot;</span><span class="p">)</span>
+		<span class="n">agent_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Agent</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">agent_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">agent_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Agent</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">agent</span> <span class="ow">in</span> <span class="n">agent_results</span><span class="p">:</span>
+		<span class="n">new_agent</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">new_agent</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span>
+		<span class="n">agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_agent</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Data&quot;</span><span class="p">:</span><span class="n">agents</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="new_agent"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.new_agent">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">new_agent</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Adds a new agent and returns the agent_id</span>
+<span class="sd">	assigned.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		Returns agent_id of the new agent.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">new_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_agent</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Agent_ID&quot;</span><span class="p">:</span><span class="n">new_agent</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 </pre></div>
 
           </div>
