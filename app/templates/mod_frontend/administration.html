@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<h1>Administration</h1>
+<div class="row">
+    <div class="text-center col-md-3">
+        <h2>Incident Status</h2>
+        <table class="table table-sm" id="StatusTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th><button type="button" class="btn btn-primary btn-sm">New</button></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center col-md-3">
+        <h2>Incident Priorities</h2>
+        <table class="table table-sm" id="PriorityTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th><button type="button" id="NewPriorityButton" class="btn btn-primary btn-sm" onclick="NewPriorityonTable()">New</button></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center col-md-3">
+        <h2>Agent Groups</h2>
+        <table class="table table-sm" id="AgentGroupsTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th><button type="button" class="btn btn-primary btn-sm">New</button></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center col-md-3">
+            <h2>Categories</h2>
+            <table class="table table-sm" id="CategoriesTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th><button type="button" class="btn btn-primary btn-sm">New</button></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+    </div>
+</div>
+
+<div class="row">
+        <div class="text-center col-md-2">
+            <h2>Incident Status</h2>
+            <table class="table table-sm" id="StatusTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center col-md-2">
+            <h2>Incident Priorities</h2>
+            <table class="table table-sm" id="PriorityTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center col-md-2">
+            <h2>Incident Status</h2>
+            <table class="table table-sm" id="StatusTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            </div>
+    </div>
+
+	Agent Groups<br />
+	Requester Departments<br />
+	Categories<br />
+	Requesters<br />
+</div>
+<script>
+    function LoadStatusTable() {
+        var tableRef = document.getElementById('StatusTable').getElementsByTagName('tbody')[0];
+        var request = new XMLHttpRequest();
+        request.open('GET', '/api/status/', true);
+        request.onload = function() {
+            if (request.status >= 200) {
+                var data = JSON.parse(request.responseText);
+                var data = data['Data']
+                for (var i = 0; i < data.length; i++) {
+                    var newRow =tableRef.insertRow(tableRef.rows.length);
+
+                    var name_cell = newRow.insertCell(0);
+                    var name_data = document.createTextNode(data[i].name);
+                    name_cell.appendChild(name_data);
+
+                    var delete_button_cell = newRow.insertCell(1);
+                    var element3 = document.createElement("input");
+                    element3.type = "button";
+                    element3.name = "add";
+                    element3.value="Remove";
+                    element3.className="btn btn-danger btn-sm";
+                    delete_button_cell.appendChild(element3);
+                    
+                    
+                };
+            };
+        };
+        request.onerror = function() {
+            console.log("StatusTable Error");
+        };
+        request.send();
+    };
+
+    function AddNewPriority() {
+        console.log("helo2");
+    };
+
+    function NewPriorityonTable() {
+        var tableRef = document.getElementById('PriorityTable').getElementsByTagName('tbody')[0];
+        var newRow =tableRef.insertRow(tableRef.rows.length);
+        var name_cell = newRow.insertCell(0);
+        var name_data = document.createElement("input");
+        name_data.type = "text";
+        name_data.id="NewPriorityNameTextbox"
+        name_data.className="form-control form-control-sm";
+        name_cell.appendChild(name_data);
+
+        var apply_cell = newRow.insertCell(1);
+        var apply_data = document.createElement("input");
+        apply_data.type = "button";
+        apply_data.value="Apply";
+        apply_data.id = "NewPriorityApplyButton";
+        apply_data.className="btn btn-primary btn-sm";
+        apply_data.onclick = function() { 
+            var ApplyButton = document.getElementById('NewPriorityApplyButton');
+            ApplyButton.value="Applying...";
+        }
+        apply_cell.appendChild(apply_data);
+    }
+
+    function LoadPriorityTable() {
+        var tableRef = document.getElementById('PriorityTable').getElementsByTagName('tbody')[0];
+        var request = new XMLHttpRequest();
+        request.open('GET', '/api/priority/', true);
+        request.onload = function() {
+            if (request.status >= 200) {
+                var data = JSON.parse(request.responseText);
+                var data = data['Data']
+                for (var i = 0; i < data.length; i++) {
+                    var newRow =tableRef.insertRow(tableRef.rows.length);
+
+                    var name_cell = newRow.insertCell(0);
+                    var name_data = document.createTextNode(data[i].name);
+                    name_cell.appendChild(name_data);
+
+                    var delete_button_cell = newRow.insertCell(1);
+                    var element3 = document.createElement("input");
+                    element3.type = "button";
+                    element3.name = "add";
+                    element3.value="Remove";
+                    element3.className="btn btn-danger btn-sm";
+                    delete_button_cell.appendChild(element3);
+                };
+            };
+        };
+        request.onerror = function() {
+            console.log("PriorityTable Error");
+        };
+        request.send();
+    };
+    window.onload = function() {
+        LoadStatusTable();
+        LoadPriorityTable();
+    };
+</script>
+{% endblock %}

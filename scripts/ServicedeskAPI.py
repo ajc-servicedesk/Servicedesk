@@ -131,7 +131,10 @@ def get_priority():
 def new_priority():
     url = 'http://127.0.0.1:5000/api/priority/'
 
-    r = requests.post(url)
+    data = {'priority': {'name': 'Urgent'},
+        }
+    print(data)
+    r = requests.post(url, json=data)
 
     # Response, status etc
     print(r.text)

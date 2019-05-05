@@ -8,9 +8,11 @@ db = SQLAlchemy(application)
 
 from app.modules.api.views import mod_api
 from app.modules.docs.views import mod_docs
+from app.modules.frontend.views import mod_frontend
 # Register blueprint(s)
 application.register_blueprint(mod_api)
 application.register_blueprint(mod_docs)
+application.register_blueprint(mod_frontend)
 
 from app.modules.api import models
 models.db.create_all()

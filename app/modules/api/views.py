@@ -359,8 +359,14 @@ def new_priority() -> jsonify:
 		Returns priority_id, name of the new priority.
 	"""
 	new_priority = IncidentPriority()
-	db.session.add(new_priority)
-	db.session.commit()
+	post_data = request.json
+	if 'priority' not in post_data:
+		return jsonify({"Error": "No priority data"})
+	if 'name' in post_data['priority']:
+		new_priority = IncidentPriority()
+		new_priority.name = post_data['priority']['name']
+		db.session.add(new_priority)
+		db.session.commit()
 	return jsonify({"priority_id":new_priority.id})
 
 

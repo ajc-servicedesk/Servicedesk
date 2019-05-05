@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<h1>Home</h1>
+<p class="important">
+Home
+<div class="container">
+    <table class="table table-sm" id="IncidentsTable">
+        <thead>
+            <tr>
+                <th>Incident ID</th>
+                <th>Subject</th>
+                <th>Description</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+<script>
+    console.log("Hello");
+    var tableRef = document.getElementById('IncidentsTable').getElementsByTagName('tbody')[0];
+    var request = new XMLHttpRequest();
+    request.open('GET', '/api/incident/', true);
+    request.onload = function() {
+        console.log(request.status);
+        if (request.status >= 200) {
+            var data = JSON.parse(request.responseText);
+            var data = data['Data']
+            for (var i = 0; i < data.length; i++) {
+                var newRow =tableRef.insertRow(tableRef.rows.length);
+
+                var id_cell = newRow.insertCell(0);
+                var id_data = document.createTextNode(data[i].id);
+                id_cell.appendChild(id_data);
+
+                var subject_cell =          newRow.insertCell(1);
+                var subject_data =          document.createTextNode(data[i].subject);
+                subject_cell.appendChild(subject_data);
+
+                var description_cell = newRow.insertCell(2);
+                var description_data = document.createTextNode(data[i].description);
+                description_cell.appendChild(description_data);
+
+                var status_cell = newRow.insertCell(3);
+                var status_data = document.createTextNode(data[i].status);
+                status_cell.appendChild(status_data);
+            };
+        };
+    };
+    request.onerror = function() {
+    console.log("IncidentsTable Error");
+    };
+    request.send();
+</script>
+
+{% endblock %}
