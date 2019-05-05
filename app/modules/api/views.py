@@ -179,3 +179,36 @@ def new_category() -> jsonify:
 	db.session.add(new_category)
 	db.session.commit()
 	return jsonify({"Category_ID":new_category.id})
+
+
+@mod_api.route('/status/', methods=['GET'])
+def get_status() -> jsonify:
+	"""
+	Retrieve a list of all statuses.
+
+	Returns:
+		Returns name and id of status
+	"""
+	statuses = []
+	status_results = db.session.query(IncidentStatus).all()
+	for status in status_results:
+		new_status = {}
+		new_status['id'] = status.id
+		new_status['name'] = status.name
+		statuses.append(new_status)
+	return jsonify({"Data":statuses})
+
+
+@mod_api.route('/status/', methods=['POST'])
+def new_status() -> jsonify:
+	"""
+	Adds a new status and returns the status_id
+	assigned.
+
+	Returns:
+		Returns status_id, name of the new status.
+	"""
+	new_status = IncidentStatus()
+	db.session.add(new_status)
+	db.session.commit()
+	return jsonify({"Status_ID":new_status.id})
