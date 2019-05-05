@@ -124,7 +124,7 @@ class Agent(db.Model):
 	name = db.Column(db.String(100))
 	email_address = db.Column(db.String(100))
 	notes = db.relationship('IncidentNote', backref='agent', lazy=True)
-	incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
+	incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=True)
 
 
 class RequesterDepartment(db.Model):

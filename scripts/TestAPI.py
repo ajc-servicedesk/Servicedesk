@@ -14,9 +14,27 @@ def new_incident():
     print(r.status_code)
 
 def new_agent():
-    url = 'https://apt-servicedesk.azurewebsites.net/api/agent/'
+    url = 'http://127.0.0.1:5000/api/agent/'
 
     r = requests.post(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def get_agent():
+    url = 'http://127.0.0.1:5000/api/agent/'
+
+    r = requests.get(url)
+
+    # Response, status etc
+    print(r.text)
+    print(r.status_code)
+
+def get_incident():
+    url = 'https://apt-servicedesk.azurewebsites.net/api/agent/'
+
+    r = requests.get(url)
 
     # Response, status etc
     print(r.text)
