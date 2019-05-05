@@ -70,9 +70,11 @@ def get_agents(agent_id: str = "") -> jsonify:
 		Returns json message.
 
 		{
-			"Data": {
-				"id": "1"
-			}
+			"Data": [
+				{
+				"id": 1
+				}
+			]
 		}
 	"""
 	agents = []
@@ -84,6 +86,7 @@ def get_agents(agent_id: str = "") -> jsonify:
 	for agent in agent_results:
 		new_agent = {}
 		new_agent['id'] = agent.id
+		new_agent['name'] = agent.name
 		agents.append(new_agent)
 	return jsonify({"Data":agents})
 
