@@ -108,6 +108,14 @@
 	Requesters<br />
 </div>
 <script>
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds){
+                break;
+            };
+        };
+    };
     function LoadStatusTable() {
         var tableRef = document.getElementById('StatusTable').getElementsByTagName('tbody')[0];
         var request = new XMLHttpRequest();
@@ -141,13 +149,11 @@
         request.send();
     };
 
-    function AddNewPriority() {
-        console.log("helo2");
-    };
-
     function NewPriorityonTable() {
+        document.getElementById("NewPriorityButton").style.display = "none";
         var tableRef = document.getElementById('PriorityTable').getElementsByTagName('tbody')[0];
         var newRow =tableRef.insertRow(tableRef.rows.length);
+        newRow.id = "NewPriorityRow";
         var name_cell = newRow.insertCell(0);
         var name_data = document.createElement("input");
         name_data.type = "text";
@@ -158,18 +164,33 @@
         var apply_cell = newRow.insertCell(1);
         var apply_data = document.createElement("input");
         apply_data.type = "button";
-        apply_data.value="Apply";
-        apply_data.id = "NewPriorityApplyButton";
+        apply_data.value="Apply"; 
+        apply_data.setAttribute("id", "NewPriorityApplyButton");
         apply_data.className="btn btn-primary btn-sm";
         apply_data.onclick = function() { 
-            var ApplyButton = document.getElementById('NewPriorityApplyButton');
-            ApplyButton.value="Applying...";
-        }
+            this.value = "Applying...";
+            var request = new XMLHttpRequest();
+            request.open('POST', '/api/priority/', true);
+            request.setRequestHeader("Content-Type", "application/json");
+            request.onload = function() {
+                if (request.status >= 200) {
+                    document.getElementById("NewPriorityButton").style.display = "block";
+                    document.getElementById("NewPriorityRow").remove();
+                    LoadPriorityTable();
+                };
+            };
+            request.onerror = function() {
+                console.log("PriorityTable Error");
+            };
+            request.send(JSON.stringify({priority: {name: document.getElementById("NewPriorityRow").getElementsByTagName('td')[0].childNodes[0].value}}));
+            
+        };
         apply_cell.appendChild(apply_data);
     }
 
     function LoadPriorityTable() {
         var tableRef = document.getElementById('PriorityTable').getElementsByTagName('tbody')[0];
+        tableRef.innerHTML = "";
         var request = new XMLHttpRequest();
         request.open('GET', '/api/priority/', true);
         request.onload = function() {
@@ -180,6 +201,7 @@
                     var newRow =tableRef.insertRow(tableRef.rows.length);
 
                     var name_cell = newRow.insertCell(0);
+                    name_cell.id = 'priority_' + data[i].id
                     var name_data = document.createTextNode(data[i].name);
                     name_cell.appendChild(name_data);
 
@@ -188,7 +210,25 @@
                     element3.type = "button";
                     element3.name = "add";
                     element3.value="Remove";
+                    element3.id = 'remove_' + name_cell.id
                     element3.className="btn btn-danger btn-sm";
+                    element3.onclick = function() {
+                        console.log("Trying to remove entry");
+                        var request = new XMLHttpRequest();
+                        var url = '/api/priority/' + this.id.replace('remove_priority_','')
+                        request.open("DELETE", url, true);
+                        request.onload = function () {
+                            var users = JSON.parse(request.responseText);
+                            console.log(request.responseText);
+                            if (request.readyState == 4 && request.status == "200") {
+                                console.log("Completed");
+                                LoadPriorityTable();
+                            } else {
+                                console.error("There was an error.");
+                            }
+                        }
+                        request.send(null);
+                    };
                     delete_button_cell.appendChild(element3);
                 };
             };
