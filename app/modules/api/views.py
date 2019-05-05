@@ -159,16 +159,31 @@ def get_department(department_id: str = "") -> jsonify:
 @mod_api.route('/department/', methods=['POST'])
 def new_department() -> jsonify:
 	"""
-	Adds a new department and returns the agent_id
+	Adds a new department and returns the department_id
 	assigned.
 
 	Returns:
-		Returns agent_id of the new department.
+		Returns department_id of the new department.
 	"""
 	new_department = RequesterDepartment()
 	db.session.add(new_department)
 	db.session.commit()
 	return jsonify({"Department_ID":new_department.id})
+
+
+@mod_api.route('/department/<department_id>', methods=['DELETE'])
+def delete_department(department_id: str = "") -> jsonify:
+	"""
+	Deletes the department associated with the id passed in
+	the url
+
+	Returns the id of the department deleted
+	"""
+	department = db.session.query(RequesterDepartment).filter_by(id=department_id).one()
+	id = department.id
+	db.session.delete(department)
+	db.session.commit()
+	return jsonify({"department_id":id})
 
 
 @mod_api.route('/category/', methods=['GET'])
@@ -204,6 +219,21 @@ def new_category() -> jsonify:
 	return jsonify({"Category_ID":new_category.id})
 
 
+@mod_api.route('/category/<category_id>', methods=['DELETE'])
+def delete_category(category_id: str = "") -> jsonify:
+	"""
+	Deletes the category associated with the id passed in
+	the url
+
+	Returns the id of the category deleted
+	"""
+	category = db.session.query(IncidentCategory).filter_by(id=category_id).one()
+	id = category.id
+	db.session.delete(category)
+	db.session.commit()
+	return jsonify({"category_id":id})
+
+
 @mod_api.route('/status/', methods=['GET'])
 def get_status() -> jsonify:
 	"""
@@ -235,6 +265,21 @@ def new_status() -> jsonify:
 	db.session.add(new_status)
 	db.session.commit()
 	return jsonify({"Status_ID":new_status.id})
+
+
+@mod_api.route('/status/<status_id>', methods=['DELETE'])
+def delete_status(status_id: str = "") -> jsonify:
+	"""
+	Deletes the status associated with the id passed in
+	the url
+
+	Returns the id of the status deleted
+	"""
+	status = db.session.query(IncidentStatus).filter_by(id=status_id).one()
+	id = status.id
+	db.session.delete(status)
+	db.session.commit()
+	return jsonify({"status_id":id})
 
 
 @mod_api.route('/priority/', methods=['GET'])
@@ -270,6 +315,21 @@ def new_priority() -> jsonify:
 	return jsonify({"priority_id":new_priority.id})
 
 
+@mod_api.route('/priority/<priority_id>', methods=['DELETE'])
+def delete_priority(priority_id: str = "") -> jsonify:
+	"""
+	Deletes the priority associated with the id passed in
+	the url
+
+	Returns the id of the priority deleted
+	"""
+	priority = db.session.query(IncidentPriority).filter_by(id=priority_id).one()
+	id = priority.id
+	db.session.delete(priority)
+	db.session.commit()
+	return jsonify({"priority_id":id})
+
+
 @mod_api.route('/impact/', methods=['GET'])
 def get_impact() -> jsonify:
 	"""
@@ -301,6 +361,21 @@ def new_impact() -> jsonify:
 	db.session.add(new_impact)
 	db.session.commit()
 	return jsonify({"impact_id":new_impact.id})
+
+
+@mod_api.route('/impact/<impact_id>', methods=['DELETE'])
+def delete_impact(impact_id: str = "") -> jsonify:
+	"""
+	Deletes the impact associated with the id passed in
+	the url
+
+	Returns the id of the impact deleted
+	"""
+	impact = db.session.query(IncidentImpact).filter_by(id=impact_id).one()
+	id = impact.id
+	db.session.delete(impact)
+	db.session.commit()
+	return jsonify({"impact_id":id})
 
 
 @mod_api.route('/sub_category/', methods=['GET'])
@@ -336,6 +411,21 @@ def new_sub_category() -> jsonify:
 	return jsonify({"sub_category_id":new_sub_category.id})
 
 
+@mod_api.route('/sub_category/<sub_category_id>', methods=['DELETE'])
+def delete_sub_category(sub_category_id: str = "") -> jsonify:
+	"""
+	Deletes the sub_category associated with the id passed in
+	the url
+
+	Returns the id of the sub_category deleted
+	"""
+	sub_category = db.session.query(IncidentSubCategory).filter_by(id=sub_category_id).one()
+	id = sub_category.id
+	db.session.delete(sub_category)
+	db.session.commit()
+	return jsonify({"sub_category_id":id})
+
+
 @mod_api.route('/urgency/', methods=['GET'])
 def get_urgency() -> jsonify:
 	"""
@@ -369,6 +459,21 @@ def new_urgency() -> jsonify:
 	return jsonify({"urgency_id":new_urgency.id})
 
 
+@mod_api.route('/urgency/<urgency_id>', methods=['DELETE'])
+def delete_urgency(urgency_id: str = "") -> jsonify:
+	"""
+	Deletes the urgency associated with the id passed in
+	the url
+
+	Returns the id of the urgency deleted
+	"""
+	urgency = db.session.query(IncidentSubCategory).filter_by(id=urgency_id).one()
+	id = urgency.id
+	db.session.delete(urgency)
+	db.session.commit()
+	return jsonify({"urgency":id})
+
+
 @mod_api.route('/agent_group/', methods=['GET'])
 def get_agent_group() -> jsonify:
 	"""
@@ -400,3 +505,18 @@ def new_agent_group() -> jsonify:
 	db.session.add(new_agent_group)
 	db.session.commit()
 	return jsonify({"agent_group_id":new_agent_group.id})
+
+
+@mod_api.route('/agent_group/<agent_group_id>', methods=['DELETE'])
+def delete_agent_group(agent_group_id: str = "") -> jsonify:
+	"""
+	Deletes the urgency associated with the id passed in
+	the url
+
+	Returns the id of the urgency deleted
+	"""
+	agent_group = db.session.query(AgentGroup).filter_by(id=agent_group_id).one()
+	id = agent_group.id
+	db.session.delete(agent_group)
+	db.session.commit()
+	return jsonify({"agent_group":id})
