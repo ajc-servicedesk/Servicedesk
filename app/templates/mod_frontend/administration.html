@@ -51,6 +51,7 @@
         };
     };
     function NewIncidentPriority() {
+        /* Adds a new incidentpriority entry */
         document.getElementById("NewIncidentPriorityButton").style.display = "none"; // Hide New button
         var IncidentPriorityTable = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
         var NewIncidentPriorityRow =IncidentPriorityTable.insertRow(IncidentPriorityTable.rows.length);
@@ -77,7 +78,7 @@
                 if (NewIncidentPriorityRequest.status >= 200) {
                     document.getElementById("NewIncidentPriorityButton").style.display = "block";
                     document.getElementById("IncidentPriorityRow").remove();
-                    LoadPriorityTable();
+                    LoadIncidentPriorityTable();
                 };
             };
             NewIncidentPriorityRequest.onerror = function() {
@@ -88,7 +89,8 @@
         NewIncidentPriorityApplyButtonCell.appendChild(NewIncidentPriorityApplyButton);
     }
 
-    function LoadPriorityTable() {
+    function LoadIncidentPriorityTable() {
+        /* Loads all of the IncidentPriorities */
         document.getElementById("NewIncidentPriorityButton").style.display = "block";
         var IncidentPriorityTable = document.getElementById('IncidentPriorityTable').getElementsByTagName('tbody')[0];
         IncidentPriorityTable.innerHTML = ""; // To ensure no entry is repeated
@@ -122,7 +124,7 @@
                         IncidentPriorityRemoveRequest.onload = function () {
                             var users = JSON.parse(IncidentPriorityRemoveRequest.responseText);
                             if (IncidentPriorityRemoveRequest.readyState == 4 && IncidentPriorityRemoveRequest.status == "200") {
-                                LoadPriorityTable();
+                                LoadIncidentPriorityTable();
                             } else {
                             }
                         }
@@ -137,7 +139,7 @@
         GETIncidentPriority.send();
     };
     window.onload = function() {
-        LoadPriorityTable();
+        LoadIncidentPriorityTable();
     };
 </script>
 {% endblock %}
