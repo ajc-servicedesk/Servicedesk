@@ -23,11 +23,12 @@
         <table id="IncidentsTable" class="table table-sm table-borderless table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th></th>
                     <th>Subject</th>
                     <th>Agent</th>
                     <th>From</th>
                     <th>Created</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -178,7 +179,7 @@
                   <option>3</option>
                   <option>4</option>
                 </select>
-    
+                https://www.w3schools.com/howto/howto_js_autocomplete.asp
               </div> 
 
             </div>
@@ -206,8 +207,12 @@
                 var NewIncidentRow =IncidentsTable.insertRow(IncidentsTable.rows.length);
                 NewIncidentRow.id = IncidentsRequestResponse[i].id
                 NewIncidentRow.onclick = function() {
-                    console.log(this.id);
-                    window.location.href = '/incidents/' + this.id;
+                    if (document.getElementById('checkbox_'+this.id).checked == true) {
+                        document.getElementById('checkbox_'+this.id).checked = false;
+                    }
+                    else {
+                        document.getElementById('checkbox_'+this.id).checked = true;
+                    };
                 };
 
                 var IncidentIDCell = NewIncidentRow.insertCell(0);
@@ -215,20 +220,34 @@
                 IncidentIDCell.appendChild(IncidentIDData);
 
                 var IncidentSubjectCell = NewIncidentRow.insertCell(1);
+                IncidentSubjectCell.onclick = function() { window.location.href = "/incidents/"+; };
                 var IncidentSubjectData = document.createTextNode(IncidentsRequestResponse[i].subject);
                 IncidentSubjectCell.appendChild(IncidentSubjectData);
 
                 var IncidentAgentCell = NewIncidentRow.insertCell(2);
-                var IncidentAgentData = document.createTextNode(IncidentsRequestResponse[i].description);
+                var IncidentAgentData = document.createTextNode(IncidentsRequestResponse[i].agent_assigned);
                 IncidentAgentCell.appendChild(IncidentAgentData);
 
                 var IncidentFromCell = NewIncidentRow.insertCell(3);
-                var IncidentFromData = document.createTextNode(IncidentsRequestResponse[i].status);
+                var IncidentFromData = document.createTextNode(IncidentsRequestResponse[i].from);
                 IncidentFromCell.appendChild(IncidentFromData);
 
-                var IncidentCreatedCell = NewIncidentRow.insertCell(3);
-                var IncidentCreatedData = document.createTextNode(IncidentsRequestResponse[i].status);
+                var IncidentCreatedCell = NewIncidentRow.insertCell(4);
+                var IncidentCreatedData = document.createTextNode("");
                 IncidentCreatedCell.appendChild(IncidentCreatedData);
+                
+                var IncidentCheckboxCell = NewIncidentRow.insertCell(5);
+                var main = document.createElement('div');
+                main.className = "form-check";
+                var inputmain = document.createElement('input');
+                inputmain.className = "form-check-input";
+                inputmain.type = "checkbox";
+                inputmain.id = 'checkbox_'+ IncidentsRequestResponse[i].id;
+                main.appendChild(inputmain);
+                IncidentCheckboxCell.appendChild(main);
+                /*<div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></input>
+                </div>*/
             };
         };
     };
