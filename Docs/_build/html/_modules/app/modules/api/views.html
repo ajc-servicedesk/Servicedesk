@@ -141,7 +141,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for app.modules.api.views</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Blueprint</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
 <span class="kn">from</span> <span class="nn">app</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">app.modules.api.models</span> <span class="k">import</span> <span class="o">*</span>
@@ -150,7 +151,7 @@
 <span class="n">mod_api</span> <span class="o">=</span> <span class="n">Blueprint</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span> <span class="vm">__name__</span><span class="p">,</span> <span class="n">url_prefix</span><span class="o">=</span><span class="s1">&#39;/api&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="get_incidents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_incidents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
-<span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident/&lt;int:incident_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/incident/&lt;incident_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_incidents</span><span class="p">(</span><span class="n">incident_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieve a list of all incidents (default=last100).</span>
@@ -163,21 +164,21 @@
 <span class="sd">	Returns:</span>
 <span class="sd">		Returns json message.</span>
 
-<span class="sd">		{&quot;Data&quot;: {</span>
-<span class="sd">				&quot;id&quot;: &quot;1&quot;</span>
-<span class="sd">				}</span>
-<span class="sd">		}</span>
-
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">incidents</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">if</span> <span class="n">incident_id</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Do the search with the ID&quot;</span><span class="p">)</span>
 		<span class="n">incident_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Incident</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span> <span class="o">=</span> <span class="n">incident_id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="n">incident_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Incident</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 	<span class="k">for</span> <span class="n">incident</span> <span class="ow">in</span> <span class="n">incident_results</span><span class="p">:</span>
 		<span class="n">new_incident</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="n">new_incident</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">incident</span><span class="o">.</span><span class="n">id</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">new_incident</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">incident</span><span class="o">.</span><span class="n">status</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">pass</span>
+		<span class="n">new_incident</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">incident</span><span class="o">.</span><span class="n">subject</span>
+		<span class="n">new_incident</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">incident</span><span class="o">.</span><span class="n">description</span>
 		<span class="n">incidents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_incident</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Data&quot;</span><span class="p">:</span><span class="n">incidents</span><span class="p">})</span></div>
 
@@ -192,13 +193,53 @@
 <span class="sd">		Returns incident_id of the new ticket entry.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">new_incident</span> <span class="o">=</span> <span class="n">Incident</span><span class="p">()</span>
+	<span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">post_data</span><span class="p">)</span>
+	<span class="k">if</span> <span class="s1">&#39;incident&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="s2">&quot;No incident data&quot;</span><span class="p">})</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3&quot;</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">])</span>
+	<span class="k">if</span> <span class="s1">&#39;status&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]:</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="n">status1</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">IncidentStatus</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;status&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+			<span class="n">new_incident</span><span class="o">.</span><span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status1</span><span class="p">)</span>
+			<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+		<span class="k">except</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="s2">&quot;couldn&#39;t find the status&quot;</span><span class="p">})</span>
+
+	<span class="k">if</span> <span class="s1">&#39;priority&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">priority</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;priority&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;agent_group&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;agent_group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">agent_group</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;agent_group&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;agent_assigned&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;agent_assigned&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">agent_assigned</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;agent_assigned&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;department&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;department&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">department</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;department&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;category&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;category&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">category</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;category&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;sub_category&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;sub_category&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">sub_category</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;sub_category&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;requester&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;requester&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">requester</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;requester&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;subject&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">subject</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;subject&#39;</span><span class="p">]</span>
+
+	<span class="k">if</span> <span class="s1">&#39;description&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;description&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+		<span class="n">new_incident</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;incident&#39;</span><span class="p">][</span><span class="s1">&#39;description&#39;</span><span class="p">]</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_incident</span><span class="p">)</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Ticket_ID&quot;</span><span class="p">:</span><span class="n">new_incident</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Incident_ID&quot;</span><span class="p">:</span><span class="n">new_incident</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_agents"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_agents">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
-<span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent/&lt;int:agent_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent/&lt;agent_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_agents</span><span class="p">(</span><span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Retrieve a list of all agents.</span>
@@ -229,6 +270,7 @@
 		<span class="n">new_agent</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="n">new_agent</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span>
 		<span class="n">new_agent</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">name</span>
+		<span class="n">new_agent</span><span class="p">[</span><span class="s1">&#39;email_address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">email_address</span>
 		<span class="n">agents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_agent</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Data&quot;</span><span class="p">:</span><span class="n">agents</span><span class="p">})</span></div>
 
@@ -239,13 +281,36 @@
 <span class="sd">	Adds a new agent and returns the agent_id</span>
 <span class="sd">	assigned.</span>
 
+<span class="sd">	Requires data sent as JSON</span>
+<span class="sd">	Name</span>
+<span class="sd">	email_address</span>
+
 <span class="sd">	Returns:</span>
 <span class="sd">		Returns agent_id of the new agent.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">new_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">()</span>
+	<span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">post_data</span><span class="p">)</span>
+	<span class="n">new_agent</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;agent&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+	<span class="n">new_agent</span><span class="o">.</span><span class="n">email_address</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;agent&#39;</span><span class="p">][</span><span class="s1">&#39;email_address&#39;</span><span class="p">]</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_agent</span><span class="p">)</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Agent_ID&quot;</span><span class="p">:</span><span class="n">new_agent</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="delete_agent"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_agent">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent/&lt;agent_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_agent</span><span class="p">(</span><span class="n">agent_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the agent associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the agent deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">agent</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Agent</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">agent_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">agent</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">agent</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Agent_ID&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_department"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_department">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/department/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
@@ -278,16 +343,31 @@
 <div class="viewcode-block" id="new_department"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.new_department">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/department/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">new_department</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	Adds a new department and returns the agent_id</span>
+<span class="sd">	Adds a new department and returns the department_id</span>
 <span class="sd">	assigned.</span>
 
 <span class="sd">	Returns:</span>
-<span class="sd">		Returns agent_id of the new department.</span>
+<span class="sd">		Returns department_id of the new department.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">new_department</span> <span class="o">=</span> <span class="n">RequesterDepartment</span><span class="p">()</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_department</span><span class="p">)</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Department_ID&quot;</span><span class="p">:</span><span class="n">new_department</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="delete_department"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_department">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/department/&lt;department_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_department</span><span class="p">(</span><span class="n">department_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the department associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the department deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">department</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">RequesterDepartment</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">department_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">department</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">department</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;department_id&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_category"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_category">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/category/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
@@ -318,9 +398,26 @@
 <span class="sd">		Returns Category_ID, name of the new category.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">new_category</span> <span class="o">=</span> <span class="n">IncidentCategory</span><span class="p">()</span>
+	<span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+	<span class="n">new_category</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;category&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_category</span><span class="p">)</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Category_ID&quot;</span><span class="p">:</span><span class="n">new_category</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="delete_category"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_category">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/category/&lt;category_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_category</span><span class="p">(</span><span class="n">category_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the category associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the category deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">category</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">IncidentCategory</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">category_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">category</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;category_id&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_status"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_status">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/status/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
@@ -349,11 +446,35 @@
 
 <span class="sd">	Returns:</span>
 <span class="sd">		Returns status_id, name of the new status.</span>
+<span class="sd">	</span>
+<span class="sd">	If error:</span>
+<span class="sd">		Return what data is missing or why it&#39;s bad.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">new_status</span> <span class="o">=</span> <span class="n">IncidentStatus</span><span class="p">()</span>
+	<span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+	<span class="k">if</span> <span class="s1">&#39;status&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">:</span>
+		<span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]:</span>
+			<span class="n">new_status</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="s2">&quot;no status data&quot;</span><span class="p">})</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_status</span><span class="p">)</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Status_ID&quot;</span><span class="p">:</span><span class="n">new_status</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="delete_status"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_status">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/status/&lt;status_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_status</span><span class="p">(</span><span class="n">status_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the status associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the status deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">status</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">IncidentStatus</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">status_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">status</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;status_id&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_priority"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_priority">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/priority/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
@@ -384,9 +505,30 @@
 <span class="sd">		Returns priority_id, name of the new priority.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="n">new_priority</span> <span class="o">=</span> <span class="n">IncidentPriority</span><span class="p">()</span>
-	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_priority</span><span class="p">)</span>
-	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+	<span class="k">if</span> <span class="s1">&#39;priority&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="s2">&quot;No priority data&quot;</span><span class="p">})</span>
+	<span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">]:</span>
+		<span class="n">new_priority</span> <span class="o">=</span> <span class="n">IncidentPriority</span><span class="p">()</span>
+		<span class="n">new_priority</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;priority&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+		<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_priority</span><span class="p">)</span>
+		<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;priority_id&quot;</span><span class="p">:</span><span class="n">new_priority</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="delete_priority"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_priority">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/priority/&lt;priority_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_priority</span><span class="p">(</span><span class="n">priority_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the priority associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the priority deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">priority</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">IncidentPriority</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">priority_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">priority</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">priority</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;priority_id&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_impact"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_impact">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/impact/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
@@ -422,6 +564,21 @@
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;impact_id&quot;</span><span class="p">:</span><span class="n">new_impact</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 
 
+<div class="viewcode-block" id="delete_impact"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_impact">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/impact/&lt;impact_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_impact</span><span class="p">(</span><span class="n">impact_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the impact associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the impact deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">impact</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">IncidentImpact</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">impact_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">impact</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">impact</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;impact_id&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
+
+
 <div class="viewcode-block" id="get_sub_category"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_sub_category">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/sub_category/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_sub_category</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -453,6 +610,21 @@
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_sub_category</span><span class="p">)</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;sub_category_id&quot;</span><span class="p">:</span><span class="n">new_sub_category</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="delete_sub_category"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_sub_category">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/sub_category/&lt;sub_category_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_sub_category</span><span class="p">(</span><span class="n">sub_category_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the sub_category associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the sub_category deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">sub_category</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">IncidentSubCategory</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">sub_category_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">sub_category</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">sub_category</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;sub_category_id&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
 
 
 <div class="viewcode-block" id="get_urgency"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_urgency">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/urgency/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
@@ -488,6 +660,21 @@
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;urgency_id&quot;</span><span class="p">:</span><span class="n">new_urgency</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 
 
+<div class="viewcode-block" id="delete_urgency"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_urgency">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/urgency/&lt;urgency_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_urgency</span><span class="p">(</span><span class="n">urgency_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the urgency associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the urgency deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">urgency</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">IncidentSubCategory</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">urgency_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">urgency</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">urgency</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;urgency&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
+
+
 <div class="viewcode-block" id="get_agent_group"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_agent_group">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent_group/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 <span class="k">def</span> <span class="nf">get_agent_group</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -519,6 +706,64 @@
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_agent_group</span><span class="p">)</span>
 	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;agent_group_id&quot;</span><span class="p">:</span><span class="n">new_agent_group</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="delete_agent_group"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.delete_agent_group">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/agent_group/&lt;agent_group_id&gt;&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">delete_agent_group</span><span class="p">(</span><span class="n">agent_group_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Deletes the urgency associated with the id passed in</span>
+<span class="sd">	the url</span>
+
+<span class="sd">	Returns the id of the urgency deleted</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">agent_group</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">AgentGroup</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">agent_group_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="n">agent_group</span><span class="o">.</span><span class="n">id</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">agent_group</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;agent_group&quot;</span><span class="p">:</span><span class="nb">id</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="get_requester"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.get_requester">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/requester/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get_requester</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Retrieve a list of all requester.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		Returns name and id of requester</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">requesters</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">requester_results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">requester</span> <span class="ow">in</span> <span class="n">requester_results</span><span class="p">:</span>
+		<span class="n">new_requester</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">new_requester</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">requester</span><span class="o">.</span><span class="n">id</span>
+		<span class="n">new_requester</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">requester</span><span class="o">.</span><span class="n">name</span>
+		<span class="n">new_requester</span><span class="p">[</span><span class="s1">&#39;email_address&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">requester</span><span class="o">.</span><span class="n">email_address</span>
+		<span class="n">new_requester</span><span class="p">[</span><span class="s1">&#39;user_type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">requester</span><span class="o">.</span><span class="n">user_type</span>
+		<span class="nb">print</span><span class="p">(</span><span class="n">requester</span><span class="o">.</span><span class="n">incidents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subject</span><span class="p">)</span>
+		<span class="n">requesters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_requester</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Data&quot;</span><span class="p">:</span><span class="n">requesters</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="new_requester"><a class="viewcode-back" href="../../../../index.html#app.modules.api.views.new_requester">[docs]</a><span class="nd">@mod_api</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/requester/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">new_requester</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">jsonify</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Adds a new requester and returns the requester</span>
+<span class="sd">	assigned.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		Returns requester, name of the new requester.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">new_requester</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+	<span class="n">post_data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span>
+	<span class="k">if</span> <span class="s1">&#39;requester&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;Error&quot;</span><span class="p">:</span> <span class="s2">&quot;No requester data&quot;</span><span class="p">})</span>
+	<span class="k">if</span> <span class="s1">&#39;name&#39;</span> <span class="ow">in</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;requester&#39;</span><span class="p">]:</span>
+		<span class="n">new_requester</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">post_data</span><span class="p">[</span><span class="s1">&#39;requester&#39;</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+		<span class="n">new_requester</span><span class="o">.</span><span class="n">user_type</span> <span class="o">=</span> <span class="s2">&quot;Requester&quot;</span>
+		<span class="n">new_requester</span><span class="o">.</span><span class="n">email_address</span> <span class="o">=</span> <span class="s2">&quot;ashley.collinge@outlook.com&quot;</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_requester</span><span class="p">)</span>
+	<span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s2">&quot;requester_id&quot;</span><span class="p">:</span><span class="n">new_requester</span><span class="o">.</span><span class="n">id</span><span class="p">})</span></div>
 </pre></div>
 
            </div>
