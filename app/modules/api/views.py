@@ -9,26 +9,6 @@ from sendgrid.helpers.mail import Mail
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_api = Blueprint('api', __name__, url_prefix='/api')
 
-@mod_api.route('/email_test', methods=['GET'])
-def email_test():
-	message = Mail(
-    from_email='from_email@example.com',
-	to_emails='to@example.com',
-    subject='Sending with Twilio SendGrid is Fun',
-    html_content='<strong>and easy to do anywhere, even with Python</strong>')
-	try:
-		print(os.environ.get('SENDGRID_API_KEY'))
-		sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-		response = sg.send(message)
-		print(response.status_code)
-		print(response.body)
-		print(response.headers)
-	except Exception as e:
-		print(e.message)
-	return jsonify({"data": {"status_code": response.status_code,
-							 "body": response.body,
-							 "headers": response.headers}})
-
 @mod_api.route('/incident/', methods=['GET'])
 @mod_api.route('/incident/<incident_id>', methods=['GET'])
 def get_incidents(incident_id: str = "") -> jsonify:
