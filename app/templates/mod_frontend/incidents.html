@@ -220,7 +220,7 @@
                 IncidentIDCell.appendChild(IncidentIDData);
 
                 var IncidentSubjectCell = NewIncidentRow.insertCell(1);
-                IncidentSubjectCell.onclick = function() { window.location.href = "/incidents/"+; };
+                IncidentSubjectCell.onclick = function() { window.location.href = "/incidents/" };
                 var IncidentSubjectData = document.createTextNode(IncidentsRequestResponse[i].subject);
                 IncidentSubjectCell.appendChild(IncidentSubjectData);
 
