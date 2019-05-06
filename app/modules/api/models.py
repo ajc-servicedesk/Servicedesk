@@ -18,6 +18,7 @@ class Incident(db.Model):
 	category = db.relationship('IncidentCategory', backref='incident', lazy=True)
 	sub_category = db.relationship('IncidentSubCategory', backref='incident', lazy=True)
 	requester = db.relationship('Requester', backref='incident', lazy=True)
+	impact = db.relationship('IncidentImpact', backref='incident', lazy=True)
 	notes = db.relationship('IncidentNote', backref='incident', lazy=True)
 
 class IncidentStatus(db.Model):
