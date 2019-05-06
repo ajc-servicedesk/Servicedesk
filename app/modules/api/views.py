@@ -578,3 +578,46 @@ def delete_agent_group(agent_group_id: str = "") -> jsonify:
 	db.session.delete(agent_group)
 	db.session.commit()
 	return jsonify({"agent_group":id})
+
+
+@mod_api.route('/requester/', methods=['GET'])
+def get_requester() -> jsonify:
+	"""
+	Retrieve a list of all requester.
+
+	Returns:
+		Returns name and id of requester
+	"""
+	requesters = []
+	requester_results = db.session.query(User).all()
+	for requester in requester_results:
+		new_requester = {}
+		new_requester['id'] = requester.id
+		new_requester['name'] = requester.name
+		new_requester['email_address'] = requester.email_address
+		new_requester['user_type'] = requester.user_type
+		print(requester.incidents[0].subject)
+		requesters.append(new_requester)
+	return jsonify({"Data":requesters})
+
+
+@mod_api.route('/requester/', methods=['POST'])
+def new_requester() -> jsonify:
+	"""
+	Adds a new requester and returns the requester
+	assigned.
+
+	Returns:
+		Returns requester, name of the new requester.
+	"""
+	new_requester = User()
+	post_data = request.json
+	if 'requester' not in post_data:
+		return jsonify({"Error": "No requester data"})
+	if 'name' in post_data['requester']:
+		new_requester.name = post_data['requester']['name']
+		new_requester.user_type = "Requester"
+		new_requester.email_address = "ashley.collinge@outlook.com"
+	db.session.add(new_requester)
+	db.session.commit()
+	return jsonify({"requester_id":new_requester.id})

@@ -13,13 +13,13 @@ class Incident(db.Model):
 	priority = db.relationship('IncidentPriority', backref='incident', lazy=True)
 	status = db.relationship('IncidentStatus', backref='incident', lazy=True)
 	agent_group = db.relationship('AgentGroup', backref='incident', lazy=True)
-	agent_assigned = db.relationship('User', backref='incident', lazy=True)
+	
 	department = db.relationship('RequesterDepartment', backref='incident', lazy=True)
 	category = db.relationship('IncidentCategory', backref='incident', lazy=True)
 	sub_category = db.relationship('IncidentSubCategory', backref='incident', lazy=True)
-	requester = db.relationship('User', backref='incident', lazy=True)
 	impact = db.relationship('IncidentImpact', backref='incident', lazy=True)
 	notes = db.relationship('IncidentNote', backref='incident', lazy=True)
+	requester = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 class IncidentStatus(db.Model):
 	"""
@@ -111,11 +111,11 @@ class User(db.Model):
 	date_modified = db.Column(db.DateTime, default=db.func.current_timestamp(),
 							  onupdate=db.func.current_timestamp())
 	department = db.relationship('RequesterDepartment', backref='user', lazy=True)
-	incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=False)
 	name = db.Column(db.String(100))
+	incidents = db.relationship('Incident', backref='incident', lazy=True)
 	user_type = db.Column(db.String(50))
-	agent_notes = db.relationship('IncidentNote', backref='agent', lazy=True)
-	agent_incidents = db.Column(db.Integer, db.ForeignKey('incident.id'), nullable=True)
+	agent_notes = db.relationship('IncidentNote', backref='user', lazy=True)
+	#agent_incidents = db.Column(db.Integer, db.ForeignKey('incident.assigned_agent_id'), nullable=True)
 	email_address = db.Column(db.String(100))
 
 

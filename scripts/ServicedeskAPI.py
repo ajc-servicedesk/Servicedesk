@@ -15,7 +15,7 @@ def new_incident():
                          'department': '',
                          'category': '',
                          'sub_category': '',
-                         'requester': ''}
+                         'requester': '1'}
         }
     print(data)
     r = requests.post(url, json=data)
@@ -206,7 +206,10 @@ def get_requester():
 def new_requester():
     url = 'http://127.0.0.1:5000/api/requester/'
 
-    r = requests.post(url)
+    data = {'requester': {'name': 'Ashley Collinge'},
+        }
+    print(data)
+    r = requests.post(url, json=data)
 
     # Response, status etc
     print(r.text)
@@ -228,6 +231,8 @@ def new_agent_group():
     # Response, status etc
     print(r.text)
     print(r.status_code)
+
+
 
 
 if __name__ == '__main__':
