@@ -217,10 +217,13 @@
 
                 var IncidentIDCell = NewIncidentRow.insertCell(0);
                 var IncidentIDData = document.createTextNode(IncidentsRequestResponse[i].id);
+                IncidentIDCell.id = "incident_" + IncidentsRequestResponse[i].id;
+                IncidentIDCell.onclick = function() {
+                  window.location.href = "/incidents/" + this.id.replace('incident_','');
+                };
                 IncidentIDCell.appendChild(IncidentIDData);
 
                 var IncidentSubjectCell = NewIncidentRow.insertCell(1);
-                IncidentSubjectCell.onclick = function() { window.location.href = "/incidents/" };
                 var IncidentSubjectData = document.createTextNode(IncidentsRequestResponse[i].subject);
                 IncidentSubjectCell.appendChild(IncidentSubjectData);
 
