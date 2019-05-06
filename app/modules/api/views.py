@@ -3,8 +3,6 @@ from flask import Flask
 from flask import Blueprint, request, jsonify
 from app import db
 from app.modules.api.models import *
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
 
 # Define the blueprint: 'auth', set its url prefix: app.url/auth
 mod_api = Blueprint('api', __name__, url_prefix='/api')
