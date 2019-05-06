@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block title %}Incidents{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+<h1>Incidents</h1>
+<nav class="navbar navbar-expand-sm bg-light">
+
+        <!-- Links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-toggle="modal" data-target="#myModal">New Incident</a>
+            </li>
+        </ul>
+
+        </nav> 
+<div class="row">
+    <div class="text-center col-md-10">
+        <table id="IncidentsTable" class="table table-sm table-borderless table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Subject</th>
+                    <th>Agent</th>
+                    <th>From</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-sm-2">
+        <label>Agents</label>
+        <select class="form-control .form-control-sm" multiple>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+        </select>
+            <label>Departments</label>
+            <select class="form-control .form-control-sm" multiple>
+                <option value="1">One</option>
+                <option value="2">Two</option>
+                <option value="3">Three</option>
+            </select>
+                <label>Groups</label>
+                <select class="form-control .form-control-sm" multiple>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                    <label>Status</label>
+                    <select class="form-control .form-control-sm" multiple>
+                        <option value="1">Open</option>
+                        <option value="2">Pending</option>
+                        <option value="3">Resolved</option>
+                        <option value="3">Closed</option>
+                    </select>
+                </div>
+</div>
+<div class="modal" id="myModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+          
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">New Incident</h4>
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            
+            <!-- Modal body -->
+            <div class="modal-body">
+              <form>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Requester</span>
+        </div>
+        <input type="text" class="form-control">
+      </div>
+      <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Department</span>
+            </div>
+            <input type="text" class="form-control">
+          </div>
+          <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Group</span>
+                </div>
+                <input type="text" class="form-control">
+              </div>
+
+              <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Agent</span>
+                    </div>
+                    <input type="text" class="form-control">
+                  </div>
+      <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Subject</span>
+            </div>
+            <input type="text" class="form-control">
+          </div>
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text">Description</span>
+        </div>
+        <textarea class="form-control" rows="5"></textarea>
+      </div>
+    </form>
+
+    <div class="input-group mb-3 input-group-sm">
+            <div class="input-group-prepend">
+                    <span class="input-group-text">Impact</span>
+                </div>
+            <select class="form-control form-control-sm">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+        
+            <div class="input-group-prepend">
+                    <span class="input-group-text">Urgency</span>
+                </div>
+            <select class="form-control form-control-sm">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+
+            <div class="input-group-prepend">
+                    <span class="input-group-text">Status</span>
+                </div>
+            <select class="form-control form-control-sm">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+
+          </div> 
+
+          <div class="input-group mb-3 input-group-sm">
+                <div class="input-group-prepend">
+                        <span class="input-group-text">Category</span>
+                    </div>
+                <select class="form-control form-control-sm">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                </select>
+            
+                <div class="input-group-prepend">
+                        <span class="input-group-text">Sub-Category</span>
+                    </div>
+                <select class="form-control form-control-sm">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                </select>
+    
+                <div class="input-group-prepend">
+                        <span class="input-group-text">Status</span>
+                    </div>
+                <select class="form-control form-control-sm">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                </select>
+    
+              </div> 
+
+            </div>
+            
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Add</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+
+
+<script>
+    var IncidentsTable = document.getElementById('IncidentsTable').getElementsByTagName('tbody')[0];
+    var GetIncidentsRequest = new XMLHttpRequest();
+    GetIncidentsRequest.open('GET', '/api/incident/', true);
+    GetIncidentsRequest.onload = function() {
+        if (GetIncidentsRequest.status >= 200) {
+            var IncidentsRequestResponse = JSON.parse(GetIncidentsRequest.responseText);
+            var IncidentsRequestResponse = IncidentsRequestResponse['Data']
+            for (var i = 0; i < IncidentsRequestResponse.length; i++) {
+                var NewIncidentRow =IncidentsTable.insertRow(IncidentsTable.rows.length);
+                NewIncidentRow.id = IncidentsRequestResponse[i].id
+                NewIncidentRow.onclick = function() {
+                    console.log(this.id);
+                    window.location.href = '/incidents/' + this.id;
+                };
+
+                var IncidentIDCell = NewIncidentRow.insertCell(0);
+                var IncidentIDData = document.createTextNode(IncidentsRequestResponse[i].id);
+                IncidentIDCell.appendChild(IncidentIDData);
+
+                var IncidentSubjectCell = NewIncidentRow.insertCell(1);
+                var IncidentSubjectData = document.createTextNode(IncidentsRequestResponse[i].subject);
+                IncidentSubjectCell.appendChild(IncidentSubjectData);
+
+                var IncidentAgentCell = NewIncidentRow.insertCell(2);
+                var IncidentAgentData = document.createTextNode(IncidentsRequestResponse[i].description);
+                IncidentAgentCell.appendChild(IncidentAgentData);
+
+                var IncidentFromCell = NewIncidentRow.insertCell(3);
+                var IncidentFromData = document.createTextNode(IncidentsRequestResponse[i].status);
+                IncidentFromCell.appendChild(IncidentFromData);
+
+                var IncidentCreatedCell = NewIncidentRow.insertCell(3);
+                var IncidentCreatedData = document.createTextNode(IncidentsRequestResponse[i].status);
+                IncidentCreatedCell.appendChild(IncidentCreatedData);
+            };
+        };
+    };
+    GetIncidentsRequest.onerror = function() {
+    };
+    GetIncidentsRequest.send();
+</script>
+{% endblock %}

@@ -13,3 +13,8 @@ def index():
 @mod_frontend.route('/administration', methods=['GET'])
 def administration():
     return render_template("mod_frontend/administration.html")
+
+
+@mod_frontend.route('/incidents', methods=['GET'])
+def incidents():
+    return render_template("mod_frontend/incidents.html")
