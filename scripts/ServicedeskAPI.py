@@ -194,27 +194,6 @@ def new_urgency():
     print(r.text)
     print(r.status_code)
 
-def get_requester():
-    url = 'http://127.0.0.1:5000/api/requester/'
-
-    r = requests.get(url)
-
-    # Response, status etc
-    print(r.text)
-    print(r.status_code)
-
-def new_requester():
-    url = 'http://127.0.0.1:5000/api/requester/'
-
-    data = {'requester': {'name': 'Ashley Collinge'},
-        }
-    print(data)
-    r = requests.post(url, json=data)
-
-    # Response, status etc
-    print(r.text)
-    print(r.status_code)
-
 def get_agent_group():
     url = 'http://127.0.0.1:5000/api/agent_group/'
 
@@ -232,7 +211,22 @@ def new_agent_group():
     print(r.text)
     print(r.status_code)
 
-
+def new_sub_category():
+    url = 'http://127.0.0.1:5000/api/user/'
+    rand1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    data = {'user': {'email_address': '{}'.format(rand1),
+                         'name': '{}@test.com'.format(rand1),
+                         'user_type': 'requester'}
+    }
+    rand1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(4))
+    data2 = {'user': {'email_address': '{}@test.com'.format(rand1),
+                         'name': '{}'.format(rand1),
+                         'user_type': 'agent'}
+    }
+    print(data)
+    r = requests.post(url, json=data)
+    print(r.text)
+    print(r.status_code)
 
 
 if __name__ == '__main__':

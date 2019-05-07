@@ -81,6 +81,8 @@ class User(db.Model):
 	requester_id = db.relationship('Requester', backref='incident', lazy=True)
 	agent_id = db.relationship('Agent', backref='incident', lazy=True)
 	email_address = db.Column(db.String(100))
+	user_type = db.Column(db.String(15))
+	
 
 
 class Requester(db.Model):

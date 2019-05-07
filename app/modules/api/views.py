@@ -603,6 +603,59 @@ def delete_agent_group(agent_group_id: str = "") -> jsonify:
 	return jsonify({"agent_group":id})
 
 
+@mod_api.route('/user/', methods=['GET'])
+def get_users():
+	user_results = db.session.query(User).all()
+	new_users = []
+	for user in user_results:
+		new_user = {}
+		new_user['email_address'] = user.email_address
+		new_user['name'] = user.name
+		new_user['user_type'] = user.user_type
+		print(len(user.requester_id))
+		print(len(user.agent_id))
+		if len(user.requester_id) > 0:
+			new_user['requester'] = {'requester_id': user.requester_id[0].id}
+		if len(user.agent_id) > 0:
+			new_user['agent'] = {'agent_id': user.agent_id[0].id}
+		new_users.append(new_user)
+	return jsonify(new_users)
+
+
+@mod_api.route('/user/', methods=['POST'])
+def new_user():
+	"""
+	"""
+	new_user = User()
+	post_data = request.json
+	if 'user' not in post_data:
+		return jsonify({"Error": "No user data"})
+	else:
+		pass
+	if 'name' in post_data['user']:
+		new_user.name = post_data['user']['name']
+	else:
+		return jsonify({"Error": "No user data"})
+	if 'email_address' in post_data['user']:
+		new_user.email_address = post_data['user']['email_address']
+	else:
+		return jsonify({"Error": "No email_address data"})
+	if 'user_type' in post_data['user']:
+		new_user.user_type = post_data['user']['user_type']
+		if post_data['user']['user_type'] == 'requester':
+			new_requester = Requester()
+			new_user.requester_id.append(new_requester)
+		elif post_data['user']['user_type'] == 'agent':
+			new_agent = Agent()
+			new_user.agent_id.append(new_agent)
+		else:
+			return jsonify({"error": "issue with deciding on requester/agent"})
+	else:
+		return jsonify({"Error": "No user_type data"})
+	db.session.add(new_user)
+	db.session.commit()
+	return jsonify({"user_id": new_user.id})
+
 @mod_api.route('/requester/', methods=['GET'])
 def get_requester() -> jsonify:
 	"""
