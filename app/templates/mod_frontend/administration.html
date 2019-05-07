@@ -49,21 +49,46 @@
             </table>
         </div>
 </div>
-<div class="container">
-<h1>Requesters</h1>
-    <pre class="pre-scrollable">Text in a pre element
-    is displayed in a fixed-width
-    font, and it preserveshttttttttttttttttttttt
-    both      spaces and
-  </pre>
-  <h1>Agents</h1>
-    <pre class="pre-scrollable">Text in a pre element
-    is displayed in a fixed-width
-    font, and it preserveshtttttttttttttttttt
-    both      spaces and
-  </pre>
+<div class="row">
+        <h1>Requesters</h1>
+    <div class="text-center col-md-3">
+    </div>
+    <div class="text-center col-md-9">
+
+        <pre class="pre-scrollable">
+                <table class="table table-sm" id="RequesterTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+        </pre>
+
   </div>
 </div>
+
+<div class="row">
+        <h1>Agents</h1>
+        <div class="text-center col-md-3">
+            </div>
+            <div class="text-center col-md-9">
+        <pre class="pre-scrollable">
+            <table class="table table-sm" id="AgentTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </pre>
+    </div>
+</div>
+
 <script>
     function sleep(milliseconds) {
         var start = new Date().getTime();
@@ -342,11 +367,107 @@
         };
         GETIncidentCategory.send();
     };
+    function LoadRequesterTable() {
+        /* Loads all of the IncidentPriorities */
+        var RequesterTable = document.getElementById('RequesterTable').getElementsByTagName('tbody')[0];
+        RequesterTable.innerHTML = ""; // To ensure no entry is repeated
+        var RequesterTableRequest = new XMLHttpRequest();
+        RequesterTableRequest.open('GET', '/api/user/', true);
+        RequesterTableRequest.onload = function() {
+            if (RequesterTableRequest.status >= 200) {
+                var RequesterList = JSON.parse(RequesterTableRequest.responseText);
+                for (var i = 0; i < RequesterList.length; i++) {
+                    if (RequesterList[i].user_type == 'requester') {
+                        var NewRequesterRow =RequesterTable.insertRow(RequesterTable.rows.length);
+                        var RequesterNameCell = NewRequesterRow.insertCell(0);
+                        // Add ID of IncidentPriority to IncidentCategoryNameCell
+                        RequesterNameCell.id = 'IncidentCategory_' + RequesterList[i].id
+                        var RequesterNameData = document.createTextNode(RequesterList[i].name);
+                        RequesterNameCell.appendChild(RequesterNameData);
+                        var RequesterRemoveButtonRow = NewRequesterRow.insertCell(1);
+                        var RequesterRemoveButton = document.createElement("input");
+                        RequesterRemoveButton.type = "button";
+                        RequesterRemoveButton.name = "add";
+                        RequesterRemoveButton.value="Remove";
+                        RequesterRemoveButton.id = 'RemoveButton_' + RequesterNameCell.id
+                        RequesterRemoveButton.className="btn btn-danger btn-sm";
+                        RequesterRemoveButton.onclick = function() {
+                            var RequesterRemoveRequest = new XMLHttpRequest();
+                            var url = '/api/user/' + this.id.replace('RemoveButton_Requester_','')
+                            RequesterRemoveRequest.open("DELETE", url, true);
+                            RequesterRemoveRequest.onload = function () {
+                                var users = JSON.parse(RequesterRemoveRequest.responseText);
+                                if (RequesterRemoveRequest.readyState == 4 && RequesterRemoveRequest.status == "200") {
+                                    LoadRequesterTable();
+                                } else {
+                                }
+                            }
+                            RequesterRemoveRequest.send(null);
+                        };
+                        RequesterRemoveButtonRow.appendChild(RequesterRemoveButton);
+                    };
+                };
+            };
+        };
+        RequesterTableRequest.onerror = function() {
+        };
+        RequesterTableRequest.send();
+    };
+
+
+    function LoadAgentTable() {
+        /* Loads all of the IncidentPriorities */
+        var AgentTable = document.getElementById('AgentTable').getElementsByTagName('tbody')[0];
+        AgentTable.innerHTML = ""; // To ensure no entry is repeated
+        var AgentTableRequest = new XMLHttpRequest();
+        AgentTableRequest.open('GET', '/api/user/', true);
+        AgentTableRequest.onload = function() {
+            if (AgentTableRequest.status >= 200) {
+                var AgentList = JSON.parse(AgentTableRequest.responseText);
+                for (var i = 0; i < AgentList.length; i++) {
+                    if (AgentList[i].user_type == 'agent') {
+                        var NewAgentRow =AgentTable.insertRow(AgentTable.rows.length);
+                        var AgentNameCell = NewAgentRow.insertCell(0);
+                        // Add ID of IncidentPriority to IncidentCategoryNameCell
+                        AgentNameCell.id = 'Agent_' + AgentList[i].id
+                        var AgentNameData = document.createTextNode(AgentList[i].name);
+                        AgentNameCell.appendChild(AgentNameData);
+                        var AgentRemoveButtonRow = NewAgentRow.insertCell(1);
+                        var AgentRemoveButton = document.createElement("input");
+                        AgentRemoveButton.type = "button";
+                        AgentRemoveButton.name = "add";
+                        AgentRemoveButton.value="Remove";
+                        AgentRemoveButton.id = 'RemoveButton_' + AgentNameCell.id
+                        AgentRemoveButton.className="btn btn-danger btn-sm";
+                        AgentRemoveButton.onclick = function() {
+                            var AgentRemoveRequest = new XMLHttpRequest();
+                            var url = '/api/user/' + this.id.replace('RemoveButton_Agent_','')
+                            AgentRemoveRequest.open("DELETE", url, true);
+                            AgentRemoveRequest.onload = function () {
+                                var users = JSON.parse(AgentRemoveRequest.responseText);
+                                if (AgentRemoveRequest.readyState == 4 && AgentRemoveRequest.status == "200") {
+                                    LoadAgentTable();
+                                } else {
+                                }
+                            }
+                            AgentRemoveRequest.send(null);
+                        };
+                        AgentRemoveButtonRow.appendChild(AgentRemoveButton);
+                    };
+                };
+            };
+        };
+        AgentTableRequest.onerror = function() {
+        };
+        AgentTableRequest.send();
+    };
     /* ==================================*/
     window.onload = function() {
         LoadIncidentPriorityTable();
         LoadIncidentStatusTable();
         LoadIncidentCategoryTable();
+        LoadRequesterTable();
+        LoadAgentTable();
     };
 </script>
 {% endblock %}
