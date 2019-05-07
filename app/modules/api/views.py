@@ -22,7 +22,19 @@ def get_incidents(incident_id: str = "") -> jsonify:
 		Returns json message.
 
 	"""
+	results = []
 	incidents = []
+	#search_string = search.data['search']
+	"""if request.args.get('agent'):
+		print(request.args.get('agent'))
+	if request.args.get('department'):
+		print(request.args.get('department'))
+		query = Incident.department.contains(request.args.get('department'))
+	if request.args.get('agent_groups'):
+		print(request.args.get('agent_groups'))
+	if request.args.get('status'):
+		print(request.args.get('status'))
+		query = query.filter_by(Incident.status == request.args.get('status'))"""
 	if incident_id != "":
 		incident_results = db.session.query(Incident).filter_by(id = incident_id).all()
 	else:
@@ -30,12 +42,20 @@ def get_incidents(incident_id: str = "") -> jsonify:
 	for incident in incident_results:
 		new_incident = {}
 		new_incident['id'] = incident.id
-		try:
-			new_incident['status'] = incident.status[0].name
-		except:
-			pass
 		new_incident['subject'] = incident.subject
 		new_incident['description'] = incident.description
+		print(incident.priority)
+		print(incident.status)
+		print(incident.category)
+		try:
+			new_incident['priority'] = incident.priority[0].name
+		except: pass
+		try:
+			new_incident['status'] = incident.status[0].name
+		except: pass
+		try:
+			new_incident['category'] = incident.category[0].name
+		except: pass
 		incidents.append(new_incident)
 	return jsonify({"Data":incidents})
 
@@ -60,12 +80,13 @@ def new_incident() -> jsonify:
 		try:
 			status1 = db.session.query(IncidentStatus).filter_by(id=post_data['incident']['status']).one()
 			new_incident.status.append(status1)
-			db.session.commit()
+			print("Added status to incident")
 		except:
 			return jsonify({"Error": "couldn't find the status"})
 
 	if 'priority' in post_data['incident'] and post_data['incident']['priority'] != '':
-		new_incident.priority = post_data['incident']['priority']
+		priority = db.session.query(IncidentPriority).filter_by(id=post_data['incident']['priority']).one()
+		new_incident.priority.append(priority)
 
 	if 'agent_group' in post_data['incident'] and post_data['incident']['agent_group'] != '':
 		new_incident.agent_group = post_data['incident']['agent_group']
@@ -77,14 +98,16 @@ def new_incident() -> jsonify:
 		new_incident.department = post_data['incident']['department']
 
 	if 'category' in post_data['incident'] and post_data['incident']['category'] != '':
-		new_incident.category = post_data['incident']['category']
+		category = db.session.query(IncidentCategory).filter_by(id=post_data['incident']['category']).one()
+		new_incident.category.append(category)
 
 	if 'sub_category' in post_data['incident'] and post_data['incident']['sub_category'] != '':
 		new_incident.sub_category = post_data['incident']['sub_category']
 
 	if 'requester' in post_data['incident'] and post_data['incident']['requester'] != '':
-		new_incident.requester = post_data['incident']['requester']
-
+		#requester = db.session.query(IncidentRequester).filter_by(id=post_data['incident']['requester'])
+		#new_incident.requester.append(requester)
+		pass
 	if 'subject' in post_data['incident'] and post_data['incident']['subject'] != '':
 		new_incident.subject = post_data['incident']['subject']
 

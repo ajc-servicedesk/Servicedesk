@@ -198,7 +198,7 @@
 <script>
     var IncidentsTable = document.getElementById('IncidentsTable').getElementsByTagName('tbody')[0];
     var GetIncidentsRequest = new XMLHttpRequest();
-    GetIncidentsRequest.open('GET', '/api/incident/', true);
+    GetIncidentsRequest.open('GET', '/api/incident?agent=1,2,3&department=21,32,3&agent_groups=2,3,1&status=2,3,1,4', true);
     GetIncidentsRequest.onload = function() {
         if (GetIncidentsRequest.status >= 200) {
             var IncidentsRequestResponse = JSON.parse(GetIncidentsRequest.responseText);
