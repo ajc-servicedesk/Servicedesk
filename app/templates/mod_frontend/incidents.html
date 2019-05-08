@@ -307,7 +307,7 @@
       var AgentSelect = document.getElementById('RequesterDropDown');
       AgentSelect.innerHTML = "";
       var GetRequesterListRequest = new XMLHttpRequest();
-      GetRequesterListRequest.open('GET', '//apt-servicedesk.azurewebsites.net/api/requester?name='+RequesterTextbox.value, true);
+      GetRequesterListRequest.open('GET', '/api/requester?name='+RequesterTextbox.value, true);
       GetRequesterListRequest.onload = function() {
           if (GetRequesterListRequest.status >= 200) {
               var RequesterList = JSON.parse(GetRequesterListRequest.responseText);
