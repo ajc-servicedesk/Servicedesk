@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 application = Flask(__name__)
 application.config.from_object('config')
-
+application.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(application)
 
 from app.modules.api.views import mod_api

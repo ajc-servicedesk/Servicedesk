@@ -9,18 +9,19 @@
 {% block content %}
 <div class="container-fluid">
 <h1>Incidents</h1>
-<nav class="navbar navbar-expand-sm bg-light">
 
-        <!-- Links -->
-        <ul class="navbar-nav">
-            <li class="nav-item">
-                <a class="nav-link" href="#" data-toggle="modal" data-target="#myModal">New Incident</a>
-            </li>
-        </ul>
-
-        </nav> 
 <div class="row">
     <div class="text-center col-md-10">
+        <nav class="navbar navbar-expand-sm bg-light">
+
+            <!-- Links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#myModal">New Incident</a>
+                </li>
+            </ul>
+    
+            </nav> 
         <table id="IncidentsTable" class="table table-sm table-borderless table-hover">
             <thead>
                 <tr>
@@ -38,29 +39,22 @@
     </div>
     <div class="col-sm-2">
         <label>Agents</label>
-        <select class="form-control .form-control-sm" multiple>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+        <select id="FilterAgentSelect" class="form-control .form-control-sm" multiple>
         </select>
             <label>Departments</label>
             <select class="form-control .form-control-sm" multiple>
-                <option value="1">One</option>
-                <option value="2">Two</option>
-                <option value="3">Three</option>
             </select>
                 <label>Groups</label>
                 <select class="form-control .form-control-sm" multiple>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
                 </select>
                     <label>Status</label>
-                    <select class="form-control .form-control-sm" multiple>
-                        <option value="1">Open</option>
-                        <option value="2">Pending</option>
-                        <option value="3">Resolved</option>
-                        <option value="3">Closed</option>
+                    <select id="FilterStatusSelect" class="form-control .form-control-sm" multiple>
+                    </select>
+                    <label>Category</label>
+                    <select id="FilterCategorySelect" class="form-control .form-control-sm" multiple>
+                    </select>
+                    <label>Priority</label>
+                    <select id="FilterPrioritySelect" class="form-control .form-control-sm" multiple>
                     </select>
                 </div>
 </div>
@@ -81,7 +75,10 @@
         <div class="input-group-prepend">
           <span class="input-group-text">Requester</span>
         </div>
-        <input type="text" class="form-control">
+            <input class="form-control" id="NewIncidentFormRequesterInput" list="RequesterDropDown" /></label>
+            <datalist id="RequesterDropDown">
+              <option value="Chrome">
+            </datalist>
       </div>
       <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -197,6 +194,7 @@
 
     </div>
 <script>
+  function LoadIncidentTable() {
     var IncidentsTable = document.getElementById('IncidentsTable').getElementsByTagName('tbody')[0];
     var GetIncidentsRequest = new XMLHttpRequest();
     GetIncidentsRequest.open('GET', '/api/incident?agent=1,2,3&department=21,32,3&agent_groups=2,3,1&status=2,3,1,4', true);
@@ -258,5 +256,81 @@
     GetIncidentsRequest.onerror = function() {
     };
     GetIncidentsRequest.send();
+  };
+  function UpdateFilters() {
+    var something = document.getElementById('FilterStatusSelect');
+    var GETIncidentStatus = new XMLHttpRequest();
+    GETIncidentStatus.open('GET', '/api/status/', true);
+    GETIncidentStatus.onload = function() {
+        if (GETIncidentStatus.status >= 200) {
+            var IncidentStatusList = JSON.parse(GETIncidentStatus.responseText);
+            var IncidentStatusList = IncidentStatusList['Data'];
+            for (var i = 0; i < IncidentStatusList.length; i++) {
+              var SelectOption = document.createElement("option");
+              SelectOption.appendChild( document.createTextNode(IncidentStatusList[i].name) );
+              SelectOption.value=IncidentStatusList[i].id;
+              SelectOption.id = 'FilterStatus_' + IncidentStatusList[i].id;
+              something.appendChild(SelectOption);
+            };
+        };
+    };
+    GETIncidentStatus.onerror = function() {
+    };
+    GETIncidentStatus.send();
+
+
+    var AgentSelect = document.getElementById('FilterAgentSelect');
+    var GetAgentListRequest = new XMLHttpRequest();
+    GetAgentListRequest.open('GET', '/api/agent/', true);
+    GetAgentListRequest.onload = function() {
+        if (GetAgentListRequest.status >= 200) {
+            var AgentList = JSON.parse(GetAgentListRequest.responseText);
+            var AgentList = AgentList['Data'];
+            for (var i = 0; i < AgentList.length; i++) {
+              var NewAgentSelectionOption = document.createElement("option");
+              NewAgentSelectionOption.appendChild( document.createTextNode(AgentList[i].name) );
+              NewAgentSelectionOption.value=AgentList[i].id;
+              NewAgentSelectionOption.id = 'FilterAgent_' + AgentList[i].id;
+              AgentSelect.appendChild(NewAgentSelectionOption);
+            };
+        };
+    };
+    GetAgentListRequest.onerror = function() {
+    };
+    GetAgentListRequest.send();
+  };
+  function NewIncidentForm() {
+    var RequesterTextbox = document.getElementById('NewIncidentFormRequesterInput');
+    RequesterTextbox.oninput = function() {
+
+      console.log(RequesterTextbox.value);
+      var AgentSelect = document.getElementById('RequesterDropDown');
+      AgentSelect.innerHTML = "";
+      var GetRequesterListRequest = new XMLHttpRequest();
+      GetRequesterListRequest.open('GET', '/api/requester?name='+RequesterTextbox.value, true);
+      GetRequesterListRequest.onload = function() {
+          if (GetRequesterListRequest.status >= 200) {
+              var RequesterList = JSON.parse(GetRequesterListRequest.responseText);
+              var RequesterList = RequesterList['Data'];
+              for (var i = 0; i < RequesterList.length; i++) {
+                var NewRequesterSelectOption = document.createElement("option");
+                NewRequesterSelectOption.appendChild( document.createTextNode(RequesterList[i].name) );
+                NewRequesterSelectOption.value=RequesterList[i].name;
+                NewRequesterSelectOption.id = 'NewFormRequester_' + RequesterList[i].id;
+                AgentSelect.appendChild(NewRequesterSelectOption);
+              };
+          };
+      };
+      GetRequesterListRequest.onerror = function() {
+      };
+      GetRequesterListRequest.send();
+      //RequesterDropDown
+      };
+    };
+  window.onload = function() {
+    LoadIncidentTable();
+    UpdateFilters();
+    NewIncidentForm();
+    };
 </script>
 {% endblock %}

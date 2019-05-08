@@ -97,7 +97,7 @@
             console.log(NewRequesterName);
             console.log(NewRequesterEmailAddress);
             var GetRequestersReqest = new XMLHttpRequest();
-            GetRequestersReqest.open('POST', '/api/requester/', true);
+            GetRequestersReqest.open('POST', '/api/user/', true);
             GetRequestersReqest.setRequestHeader("Content-Type", "application/json");
             GetRequestersReqest.onload = function() {
                 if (GetRequestersReqest.status >= 200) {

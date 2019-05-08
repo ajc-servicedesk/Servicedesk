@@ -590,7 +590,11 @@ def get_requester() -> jsonify:
 		Returns name and id of requester
 	"""
 	requesters = []
-	requester_results = db.session.query(User).filter_by(user_type="requester").all()
+	the_query = db.session.query(User)
+	#the_query.filter_by(user_type="requester")
+	if request.args.get('name'):
+		print(request.args.get('name'))
+		requester_results = the_query.filter(User.name.like('{}%'.format(request.args.get('name')))).all()
 	for requester in requester_results:
 		new_requester = {}
 		new_requester['id'] = requester.id
