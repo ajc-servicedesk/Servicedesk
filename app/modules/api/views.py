@@ -672,7 +672,7 @@ def get_requester() -> jsonify:
 		new_requester['name'] = requester.name
 		new_requester['email_address'] = requester.email_address
 		new_requester['user_type'] = requester.user_type
-		print(requester.incidents[0].subject)
+		new_requester['created'] = requester.date_created
 		requesters.append(new_requester)
 	return jsonify({"Data":requesters})
 
@@ -688,12 +688,13 @@ def new_requester() -> jsonify:
 	"""
 	new_requester = User()
 	post_data = request.json
+	print(post_data)
 	if 'requester' not in post_data:
 		return jsonify({"Error": "No requester data"})
 	if 'name' in post_data['requester']:
 		new_requester.name = post_data['requester']['name']
 		new_requester.user_type = "Requester"
-		new_requester.email_address = "ashley.collinge@outlook.com"
+		new_requester.email_address = post_data['requester']['email_address']
 	db.session.add(new_requester)
 	db.session.commit()
 	return jsonify({"requester_id":new_requester.id})

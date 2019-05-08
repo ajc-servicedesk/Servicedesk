@@ -28,3 +28,13 @@ def get_more_incident_information(incident_id):
     """
     incident = db.session.query(Incident).filter_by(id=incident_id).one()
     return render_template("mod_frontend/incident_full.html", incident=incident)
+
+
+@mod_frontend.route('/requesters', methods=['GET'])
+def requesters():
+    return render_template("mod_frontend/requesters.html")
+
+
+@mod_frontend.route('/agents', methods=['GET'])
+def agents():
+    return render_template("mod_frontend/agents.html")

@@ -7,10 +7,35 @@
 {% endblock %}
 
 {% block content %}
+<div class="container-fluid">
 <h1>Administration</h1>
+<nav class="navbar navbar-expand-sm bg-light">
+
+        <!-- Links -->
+        <ul class="navbar-nav active">
+            <li class="nav-item active">
+                <a class="nav-link " href="/requesters">Requesters</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/agents">Agents</a>
+            </li>
+        </ul>
+
+        </nav> 
+<h2>Incident Settings</h2>
+<div class="row">
+    <div class="text-center col-md-3">
+        <h3>Incident Status</h3>
+    </div>
+    <div class="text-center col-md-3">
+        <h3>Incident Priorities</h3>
+    </div>
+    <div class="text-center col-md-3">
+        <h3>Incident Categories</h3>
+    </div>
+</div>
 <div class="row">
         <div class="text-center col-md-3">
-                <h2>Incident Status</h2>
                 <table class="table table-sm" id="IncidentStatusTable">
                     <thead>
                         <tr>
@@ -22,8 +47,7 @@
                     </tbody>
                 </table>
             </div>
-    <div class="text-center col-md-3">
-        <h2>Incident Priorities</h2>
+            <div class="text-center col-md-4">
         <table class="table table-sm" id="IncidentPriorityTable">
             <thead>
                 <tr>
@@ -36,7 +60,7 @@
         </table>
     </div>
     <div class="text-center col-md-3">
-            <h2>Incident Categories</h2>
+
             <table class="table table-sm" id="IncidentCategoryTable">
                 <thead>
                     <tr>
@@ -49,46 +73,7 @@
             </table>
         </div>
 </div>
-<div class="row">
-        <h1>Requesters</h1>
-    <div class="text-center col-md-3">
-    </div>
-    <div class="text-center col-md-9">
-
-        <pre class="pre-scrollable">
-                <table class="table table-sm" id="RequesterTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-        </pre>
-
-  </div>
 </div>
-
-<div class="row">
-        <h1>Agents</h1>
-        <div class="text-center col-md-3">
-            </div>
-            <div class="text-center col-md-9">
-        <pre class="pre-scrollable">
-            <table class="table table-sm" id="AgentTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </pre>
-    </div>
-</div>
-
 <script>
     function sleep(milliseconds) {
         var start = new Date().getTime();
