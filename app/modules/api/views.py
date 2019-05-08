@@ -595,6 +595,7 @@ def get_requester() -> jsonify:
 	if request.args.get('name'):
 		print(request.args.get('name'))
 		requester_results = the_query.filter(User.name.like('{}%'.format(request.args.get('name')))).all()
+	requester_results = the_query.all()
 	for requester in requester_results:
 		new_requester = {}
 		new_requester['id'] = requester.id
