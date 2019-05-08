@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="container-fluid">
-<h1>Requesters</h1>
+<h1><a href="\administration">Administration</a> - Requesters</h1>
 <nav class="navbar navbar-expand-sm bg-light">
         <!-- Links -->
         <ul class="navbar-nav">
@@ -109,7 +109,7 @@
             };
             GetRequestersReqest.onerror = function() {
             };
-            GetRequestersReqest.send(JSON.stringify({requester: {name:NewRequesterName, email_address:NewRequesterEmailAddress}}));
+            GetRequestersReqest.send(JSON.stringify({user: {name:NewRequesterName, email_address:NewRequesterEmailAddress, user_type: "requester"}}));
         };
         var something2 = document.getElementById('NewRequesterCloseButton');
         something2.onclick = function () {

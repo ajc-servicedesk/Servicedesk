@@ -118,81 +118,6 @@ def new_incident() -> jsonify:
 	return jsonify({"Incident_ID":new_incident.id})
 
 
-@mod_api.route('/agent/', methods=['GET'])
-@mod_api.route('/agent/<agent_id>', methods=['GET'])
-def get_agents(agent_id: str = "") -> jsonify:
-	"""
-	Retrieve a list of all agents.
-	Filter on the url to get agents for a group (e.g. /agent?group=examplegroup)
-	Retrieve json data on an agent and return. ID required.
-
-	Args
-		:agent_id (str): Unique ID for the ticket. (Optional)
-
-	Returns:
-		Returns json message.
-
-		{
-			"Data": [
-				{
-				"id": 1
-				}
-			]
-		}
-	"""
-	agents = []
-	if agent_id != "":
-		print("Do the search with the ID")
-		agent_results = db.session.query(Agent).filter_by(id = agent_id).all()
-	else:
-		agent_results = db.session.query(Agent).all()
-	for agent in agent_results:
-		new_agent = {}
-		new_agent['id'] = agent.id
-		new_agent['name'] = agent.name
-		new_agent['email_address'] = agent.email_address
-		agents.append(new_agent)
-	return jsonify({"Data":agents})
-
-
-@mod_api.route('/agent/', methods=['POST'])
-def new_agent() -> jsonify:
-	"""
-	Adds a new agent and returns the agent_id
-	assigned.
-
-	Requires data sent as JSON
-	Name
-	email_address
-
-	Returns:
-		Returns agent_id of the new agent.
-	"""
-	new_agent = Agent()
-	post_data = request.json
-	print(post_data)
-	new_agent.name = post_data['agent']['name']
-	new_agent.email_address = post_data['agent']['email_address']
-	db.session.add(new_agent)
-	db.session.commit()
-	return jsonify({"Agent_ID":new_agent.id})
-
-
-@mod_api.route('/agent/<agent_id>', methods=['DELETE'])
-def delete_agent(agent_id: str = "") -> jsonify:
-	"""
-	Deletes the agent associated with the id passed in
-	the url
-
-	Returns the id of the agent deleted
-	"""
-	agent = db.session.query(Agent).filter_by(id=agent_id).one()
-	id = agent.id
-	db.session.delete(agent)
-	db.session.commit()
-	return jsonify({"Agent_ID":id})
-
-
 @mod_api.route('/department/', methods=['GET'])
 @mod_api.route('/department/<int:department_id>', methods=['GET'])
 def get_department(department_id: str = "") -> jsonify:
@@ -665,36 +590,31 @@ def get_requester() -> jsonify:
 		Returns name and id of requester
 	"""
 	requesters = []
-	requester_results = db.session.query(User).all()
+	requester_results = db.session.query(User).filter_by(user_type="requester").all()
 	for requester in requester_results:
 		new_requester = {}
 		new_requester['id'] = requester.id
 		new_requester['name'] = requester.name
 		new_requester['email_address'] = requester.email_address
-		new_requester['user_type'] = requester.user_type
 		new_requester['created'] = requester.date_created
 		requesters.append(new_requester)
 	return jsonify({"Data":requesters})
 
-
-@mod_api.route('/requester/', methods=['POST'])
-def new_requester() -> jsonify:
+@mod_api.route('/agent/', methods=['GET'])
+def get_agents() -> jsonify:
 	"""
-	Adds a new requester and returns the requester
-	assigned.
+	Retrieve a list of all agent.
 
 	Returns:
-		Returns requester, name of the new requester.
+		Returns name and id of agent
 	"""
-	new_requester = User()
-	post_data = request.json
-	print(post_data)
-	if 'requester' not in post_data:
-		return jsonify({"Error": "No requester data"})
-	if 'name' in post_data['requester']:
-		new_requester.name = post_data['requester']['name']
-		new_requester.user_type = "Requester"
-		new_requester.email_address = post_data['requester']['email_address']
-	db.session.add(new_requester)
-	db.session.commit()
-	return jsonify({"requester_id":new_requester.id})
+	agents = []
+	agent_results = db.session.query(User).filter_by(user_type="agent").all()
+	for agent in agent_results:
+		new_agent = {}
+		new_agent['id'] = agent.id
+		new_agent['name'] = agent.name
+		new_agent['email_address'] = agent.email_address
+		new_agent['created'] = agent.date_created
+		agents.append(new_agent)
+	return jsonify({"Data":agents})

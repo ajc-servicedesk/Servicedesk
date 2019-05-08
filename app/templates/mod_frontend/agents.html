@@ -7,7 +7,183 @@
 {% endblock %}
 
 {% block content %}
-<h1>Agents</h1>
-<script>
-</script>
+<div class="container-fluid">
+        <h1><a href="\administration">Administration</a> - Agents</h1>
+        <nav class="navbar navbar-expand-sm bg-light">
+                <!-- Links -->
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#myModal">New Agent</a>
+                    </li>
+                </ul>
+                </nav> 
+        <div class="row">
+            <div class="text-center col-md-10">
+                <table id="RequestersTable" class="table table-sm table-borderless table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Email Address</th>
+                            <th>Created</th>
+                            <th>Department</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-2">
+                <label>Department</label>
+                <select class="form-control .form-control-sm" multiple>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                        </div>
+        </div>
+        
+        
+        <div class="modal" id="myModal">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                  
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">New Requester</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                      <form>
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Name</span>
+                </div>
+                <input type="text" id="NewRequesterNameTextBox" class="form-control">
+              </div>
+              <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Email Address</span>
+                    </div>
+                    <input type="text" id="NewRequesterEmailAddressTextBox" class="form-control">
+                  </div>
+                  <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Department</span>
+                        </div>
+                        <input type="text" class="form-control-plaintext" placeholder="Not in use" readonly>
+                      </div>
+                      </div> 
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button type="button" id="NewRequesterAddButton" class="btn btn-primary">Add</button>
+                      <button type="button" id="NewRequesterCloseButton" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+                </div>
+              </div>
+            </div>
+        
+        <script>
+            function Setup() {
+                var something = document.getElementById('NewRequesterAddButton');
+                something.onclick = function () {
+                    /* get in the info from the form */
+                    var NewRequesterName = document.getElementById('NewRequesterNameTextBox').value;
+                    var NewRequesterEmailAddress = document.getElementById('NewRequesterEmailAddressTextBox').value;
+                    console.log(NewRequesterName);
+                    console.log(NewRequesterEmailAddress);
+                    var GetRequestersReqest = new XMLHttpRequest();
+                    GetRequestersReqest.open('POST', '/api/requester/', true);
+                    GetRequestersReqest.setRequestHeader("Content-Type", "application/json");
+                    GetRequestersReqest.onload = function() {
+                        if (GetRequestersReqest.status >= 200) {
+                            document.getElementById('NewRequesterNameTextBox').value = "";
+                            document.getElementById('NewRequesterEmailAddressTextBox').value = "";
+                            LoadRequesterTable();
+                            $('#myModal').modal('hide');
+                        };
+                    };
+                    GetRequestersReqest.onerror = function() {
+                    };
+                    GetRequestersReqest.send(JSON.stringify({requester: {name:NewRequesterName, email_address:NewRequesterEmailAddress}}));
+                };
+                var something2 = document.getElementById('NewRequesterCloseButton');
+                something2.onclick = function () {
+                    document.getElementById('NewRequesterNameTextBox').value = "";
+                    document.getElementById('NewRequesterEmailAddressTextBox').value = "";
+                };
+            };
+            function LoadRequesterTable() {
+            var RequestersTable = document.getElementById('RequestersTable').getElementsByTagName('tbody')[0];
+            RequestersTable.innerHTML = "";
+            var GetRequestersReqest = new XMLHttpRequest();
+            GetRequestersReqest.open('GET', '/api/agent/', true);
+            GetRequestersReqest.onload = function() {
+                if (GetRequestersReqest.status >= 200) {
+                    var RequesterRequestResponse = JSON.parse(GetRequestersReqest.responseText);
+                    var RequesterRequestResponse = RequesterRequestResponse['Data']
+                    for (var i = 0; i < RequesterRequestResponse.length; i++) {
+                        var NewRequesterRow =RequestersTable.insertRow(RequestersTable.rows.length);
+                        NewRequesterRow.id = RequesterRequestResponse[i].id
+                        NewRequesterRow.onclick = function() {
+                            if (document.getElementById('checkbox_'+this.id).checked == true) {
+                                document.getElementById('checkbox_'+this.id).checked = false;
+                            }
+                            else {
+                                document.getElementById('checkbox_'+this.id).checked = true;
+                            };
+                        };
+        
+                        var RequesterIDCell = NewRequesterRow.insertCell(0);
+                        var RequesterIDData = document.createTextNode(RequesterRequestResponse[i].id);
+                        RequesterIDCell.id = "incident_" + RequesterRequestResponse[i].id;
+                        RequesterIDCell.onclick = function() {
+                          window.location.href = "/requester/" + this.id.replace('requester_','');
+                        };
+                        RequesterIDCell.appendChild(RequesterIDData);
+        
+                        var RequesterNameCell = NewRequesterRow.insertCell(1);
+                        var RequesterNameData = document.createTextNode(RequesterRequestResponse[i].name);
+                        RequesterNameCell.appendChild(RequesterNameData);
+        
+                        var RequesterEmailAddressCell = NewRequesterRow.insertCell(2);
+                        var RequesterEmailAddressData = document.createTextNode(RequesterRequestResponse[i].email_address);
+                        RequesterEmailAddressCell.appendChild(RequesterEmailAddressData);
+        
+                        var RequesterCreatedCell = NewRequesterRow.insertCell(3);
+                        var RequesterCreatedData = document.createTextNode(RequesterRequestResponse[i].created);
+                        RequesterCreatedCell.appendChild(RequesterCreatedData);
+        
+                        var RequesterDepartmentCell = NewRequesterRow.insertCell(4);
+                        var RequesterDepartmentData = document.createTextNode("");
+                        RequesterDepartmentCell.appendChild(RequesterDepartmentData);
+                        
+                        var RequesterCheckboxCell = NewRequesterRow.insertCell(5);
+                        var main = document.createElement('div');
+                        main.className = "form-check";
+                        var inputmain = document.createElement('input');
+                        inputmain.className = "form-check-input";
+                        inputmain.type = "checkbox";
+                        inputmain.id = 'checkbox_'+ RequesterRequestResponse[i].id;
+                        main.appendChild(inputmain);
+                        RequesterCheckboxCell.appendChild(main);
+                        /*<div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1"></input>
+                        </div>*/
+                    };
+                };
+            };
+            GetRequestersReqest.onerror = function() {
+            };
+            GetRequestersReqest.send();
+            };
+            window.onload = function() {
+                LoadRequesterTable();
+                Setup();
+            };
+        </script>
 {% endblock %}
