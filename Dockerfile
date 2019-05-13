@@ -20,4 +20,3 @@ RUN pwd
 RUN ls
 WORKDIR app/
 RUN ls
-CMD ["/usr/bin/uwsgi", "--http", ":9500", "--manage-script-name", "--mount", "/=__init__:application"]
