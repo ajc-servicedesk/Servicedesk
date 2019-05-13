@@ -9,10 +9,15 @@ RUN python -m pip install --upgrade pip
 COPY ./requirements.txt /app/requirements.txt
 RUN python -m pip install uwsgi
 RUN pwd
+RUN ls
 WORKDIR /app
 RUN pwd
+RUN ls
 RUN pip install --global-option=build_ext --global-option="-I/usr/include/python2.7" -r requirements.txt
 
 COPY . /app
 RUN pwd
+RUN ls
+WORKDIR app/
+RUN ls
 CMD ["/usr/bin/uwsgi", "--http", ":9500", "--manage-script-name", "--mount", "/=__init__:application"]
